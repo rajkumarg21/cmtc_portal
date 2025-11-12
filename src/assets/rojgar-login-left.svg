@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" role="img" aria-label="रोज़गार और निर्माण साप्ताहिक">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffeaea"/>
+      <stop offset="1" stop-color="#e6f7f0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="700" fill="url(#bg)" />
+
+  <!-- Waves -->
+  <path d="M0 480 C150 430 300 520 600 460 L600 700 L0 700 Z" fill="#ffb6c1"/>
+  <path d="M0 520 C200 470 400 550 600 490 L600 700 L0 700 Z" fill="#ffffff"/>
+  <path d="M0 560 C220 500 400 590 600 520 L600 700 L0 700 Z" fill="#1b5e20"/>
+
+  <!-- Text -->
+  <g font-family="Noto Sans Devanagari, Kohinoor Devanagari, sans-serif" font-weight="700" text-anchor="middle" fill="#7a0e10">
+    <text x="300" y="250" font-size="68">रोज़गार</text>
+    <text x="300" y="330" font-size="68">और</text>
+    <text x="300" y="410" font-size="68">निर्माण</text>
+  </g>
+
+  <!-- Subtext -->
+  <text x="300" y="460" font-size="24" fill="#444" font-family="Noto Sans Devanagari, sans-serif" text-anchor="middle">साप्ताहिक</text>
+
+  <!-- Optional: Decorative lines -->
+  <path d="M180 480 H420" stroke="#ffb6c1" stroke-width="3" opacity="0.5" />
+</svg>
