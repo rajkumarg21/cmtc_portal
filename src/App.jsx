@@ -1,20 +1,19 @@
 // src/App.jsx
 import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-
 import Layout from './components/layout/Layout';
 import { ToastContainer } from 'react-toastify';
 import Home from './components/homeSection/Home';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoadingSpinner from './components/ui/LoadingSpinner';
+import LoginPage from './pages/auth/LoginPage';
+//import SignupPage from './pages/auth/SignUp';
 import NotFoundPage from './pages/NotFoundPage';
 import './i18n';
 
 function AppContent() {
   const { isAuthenticated, userRole, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-
-
 
   // Redirect after login/logout if needed
   useEffect(() => {
@@ -32,7 +31,6 @@ function AppContent() {
   if (authLoading) {
     return <LoadingSpinner />;
   }
-
   // const showSidebar = isAuthenticated && (userRole === 'PORTAL_ADMIN' || userRole === 'EDITOR' || userRole === 'PUBLISHER');
   console.log("App rendered");
 
@@ -49,6 +47,10 @@ function AppContent() {
           {/* Catch-all for 404 */}
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/error" element={<NotFoundPage />} />
+
+           {/* Authentication Routes */}
+          <Route path="/login" element={<LoginPage />} />
+          {/* <Route path="/Signup" element={<SignupPage />} /> */}
         </Route>
       </Routes>
     </div>

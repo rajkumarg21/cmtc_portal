@@ -1,321 +1,536 @@
+
+/* ==========================
+   FULL UPDATED HomePage.jsx
+   WITH DEFAULT FIRST SLIDE
+   ========================== */
+
 import React, { useRef, useState, useEffect } from "react";
 import {
   Box,
   Button,
-  Grid,
-  Card,
-  CardContent,
   Typography,
-  CircularProgress, // Added for loading indicator
+  CircularProgress,
+  Container,
+  Card,
+  CardContent
 } from "@mui/material";
-import { Link } from 'react-router-dom';
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import mpMadhyamBuilding from "./../../assets/images/madhyam_pic2.jpg";
-import { useTranslation } from 'react-i18next';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-export const services = [
-  {
-    icon: "📄",
-    title_hi: "रोजगार और निर्माण",
-    desc_hi: "साप्ताहिक ‘रोजगार और निर्माण’ में मुख्यतः रोजगार संबंधित विज्ञापन, करियर और प्रतियोगी परीक्षाओं से संबंधित जानकारी प्रकाशित की जाती है। इसमें राज्य शासन, राज्य निगम के उपक्रम, भारत सरकार के उपक्रमों के विज्ञापनों का प्रकाशन किया जाता है।",
-    btn_hi: "और जाने",
-    title_en: "Rojgar Aur Nirman",
-    desc_en: "The weekly ‘Rojgar Aur Nirman’ primarily publishes employment-related advertisements, career, and competitive exam information. It includes advertisements from the State Government, State Corporation undertakings, and Government of India undertakings.",
-    btn_en: "Read More",
-    link_to: "/rojgarAndNirman"
-  },
-  {
-    icon: "🎬",
-    title_hi: "फिल्म",
-    desc_hi: "जनकल्याणकारी योजनाओं के प्रचार हेतु म.प्र. माध्यम में फिल्म शाखा कार्यरत है, जो वृत्तचित्र, टी.वी. स्पॉट्स एवं वीडियो प्रोडक्शन का निर्माण और प्रचारण करती है। अब तक कई राष्ट्रीय पुरस्कार प्राप्त फिल्में बनाई जा चुकी हैं।",
-    btn_hi: "और जाने",
-    title_en: "Film",
-    desc_en: "The Film branch at M.P. Madhyam handles the publicity of public welfare schemes, producing and broadcasting documentaries, TV spots, and video productions. Several national award-winning films have been made to date.",
-    btn_en: "Read More",
-    link_to: "/filmSectionList"
-  },
-  {
-    icon: "📁",
-    title_hi: "परियोजना",
-    desc_hi: "परियोजना शाखा द्वारा राज्य शासन के विभिन्न विभागों के लिये आउटडोर पब्लिसिटी, होर्डिंग, यूनिपोल, डिजिटल वॉल पेंटिंग, डिजिटल फोटो प्रिंटिंग आदि का कार्य किया जाता है।",
-    btn_hi: "और जाने",
-    title_en: "Project",
-    desc_en: "The Project branch carries out work like outdoor publicity, hoardings, unipoles, digital wall painting, digital photo printing, etc., for various departments of the State Government.",
-    btn_en: "Read More",
-    link_to: "/projectSectionList"
-  },
-  {
-    icon: "📢",
-    title_hi: "विज्ञापन एजेंसी",
-    desc_hi: "विज्ञापन शाखा द्वारा राज्य शासन के विभिन्न विभागों एवं संस्थाओं के विज्ञापन प्रकाशित किए जाते हैं। म.प्र. माध्यम राज्य शासन की एजेंसी के रूप में कार्य करती है।",
-    btn_hi: "और जाने",
-    title_en: "Advertising Agency",
-    desc_en: "The Advertisement branch publishes advertisements for various departments and institutions of the State Government. M.P. Madhyam acts as an official agency for the State Government.",
-    btn_en: "Read More",
-    link_to: "/advertisementSectionList"
-  },
-  {
-    icon: "🎤",
-    title_hi: "इवेंट",
-    desc_hi: "राज्य शासन के विभिन्न विभागों द्वारा आयोजित कार्यक्रमों का आयोजन एवं प्रबंधन इवेंट शाखा द्वारा किया जाता है।",
-    btn_hi: "और जाने",
-    title_en: "Event",
-    desc_en: "The organization and management of events held by various departments of the State Government are handled by the Event branch.",
-    btn_en: "Read More",
-    link_to: "/eventSectionList"
-  },
-  {
-    icon: "🖨️",
-    title_hi: "मुद्रण",
-    desc_hi: "मुद्रण शाखा द्वारा विभागीय पुस्तकें, मासिक पत्रिकाएं, फ्लेक्स, पोस्टर, ब्रोशर आदि का मुद्रण किया जाता है।",
-    btn_hi: "और जाने",
-    title_en: "Printing",
-    desc_en: "The Printing branch handles the printing of departmental books, monthly magazines, flex, posters, brochures, etc.",
-    btn_en: "Read More",
-    link_to: "/printingSectionList"
-  },
+import { getAllCarouselSlidesPublic } from "../../services/carouselService";
+import { Link, useNavigate } from "react-router-dom";
+
+/* ==========================
+   STATIC SERVICE BUTTONS
+   ========================== */
+const serviceList = [
+  { title: "SHG Products", color: "#00695c", path: "/advertisementSectionList" },
+  { title: "Livelihood Activities", color: "#f57c00", path: "/filmSectionList" },
+  { title: "Act and Rules", color: "#00695c", path: "/projectSectionList" },
+  { title: "Success Stories", color: "#f57c00", path: "/eventSectionList" },
+  { title: "Policies", color: "#00695c", path: "/printingSectionList" },
+  { title: "Annual Action Plan", color: "#f57c00", path: "/advertisementSectionList" },
 ];
 
-const HomePage = () => {
+/* ==========================
+   STATIC NEWS ITEMS
+   ========================== */
+const newsItems = [
+  "📄 List of MCLF [Advertisements]",
+  "📄 MCLF Selection Criteria [Advertisements]",
+  "📄 Requirement of resources in cluster association [Advertisements]",
+  "📄 SHG Product Promotion Initiatives",
+  "📄 Rural Development Updates",
+];
+
+/* ==========================
+   STATIC IMPORTANT LINKS
+   ========================== */
+const importantLinks = [
+  "MODEL CLF DATA ENTRY",
+  "VIDYUT SAKHI",
+  "PFMS",
+  "IPRP",
+  "CADER REGISTRATION & ICRP FEEDING PORTAL",
+  "BC SAKHI AND CBO",
+  "1-NEW SHG REGISTRATION ,2-BANK SAKHI PORTAL,3-DRY RASHON PORTAL",
+  "RURAL SOFT",
+  "NRLM MIS PORTAL",
+  "DAY-NRLM WEBSITE & OTHER STATE SRLM WEBSITES",
+];
+
+/* ========================================================
+   MAIN COMPONENT
+   ======================================================== */
+const Home = () => {
   const sliderRef = useRef(null);
-  const [isInactive, setIsInactive] = useState(false);
-  const [lastActivity, setLastActivity] = useState(Date.now());
-  const inactivityTimeout = 6000; // 6 seconds
-  const autoplayInterval = 3000; // 3 seconds
   const [slides, setSlides] = useState([]);
-  const [loading, setLoading] = useState(true); // Added loading state
-  const { i18n } = useTranslation();
-  const isHindi = i18n.language === 'hi';
-  const lastActivityRef = useRef(Date.now()); // ✅ define it here
-  const isInactiveRef = useRef(false);
-  const { t } = useTranslation();
+  const [leaderSlides, setLeaderSlides] = useState([]);  // ⭐ NEW STATE
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-
+  /* ==========================
+     FETCH SLIDES + ADD DEFAULT FIRST SLIDE
+     ========================== */
   useEffect(() => {
-    const fetchSlides = async () => {
+    const loadSlides = async () => {
       try {
-        const response = await getAllCarouselSlidesPublic();
-        const data = response.data;
-        setSlides(data || []);
-      } catch (error) {
-        console.error("Error fetching slides:", error);
-        // Optionally, set slides to an empty array or default list on error
-        setSlides([]);
+        const res = await getAllCarouselSlidesPublic();
+        const backendSlides = res.data || [];   // ⭐ DO NOT SLICE
+
+        // ⭐ Default first slide (public folder)
+        const defaultSlide = {
+          imageUrl: "/images/srlm_main.png",
+        };
+
+        // ⭐ Slider = static first + ALL backend slides
+        // setSlides([defaultSlide, ...backendSlides]);
+        setSlides([defaultSlide]);   // ⭐ ONLY default slide will show
+
+
+        // ⭐ Leaders = FIRST TWO backend slides ONLY
+        setLeaderSlides(backendSlides.slice(0, 2));
+      } catch (err) {
+        setSlides([{ imageUrl: "/images/srlm_main.png" }]);
+        setLeaderSlides([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSlides();
+    loadSlides();
   }, []);
 
-  // Combine static and dynamic slides for rendering
-  // The structure of dynamic slides is assumed to be { id, imageUrl }
-  const allSlides = [
-    { id: 'static-0', imageUrl: mpMadhyamBuilding, isStatic: true }, // Static first slide
-    ...slides.map(s => ({ id: s.id, imageUrl: s.imageUrl, isStatic: false }))
-  ];
+  /* Auto-start autoplay after load */
+  useEffect(() => {
+    if (slides.length && sliderRef.current) {
+      setTimeout(() => sliderRef.current.slickPlay(), 1000);
+    }
+  }, [slides]);
+
+  /* Slide URL formatter */
   const getSlideImageUrl = (slide) => {
-    // 1. If it's the static slide or already a full URL, return it directly.
-    if (slide.isStatic || slide.imageUrl.startsWith('http')) {
-      return slide.imageUrl;
-    }
-    // 2. If it's a dynamic relative path (e.g., /uploads/image.jpg), prefix it.
-    // NOTE: This assumes VITE_BASE_URL is correctly defined and the image exists there.
-    return `${import.meta.env.VITE_BASE_URL}${slide.imageUrl}`;
-  };
+  if (!slide?.imageUrl) return "";
+  if (slide.imageUrl.startsWith("http")) return slide.imageUrl;
+  if (slide.imageUrl.startsWith("/")) return slide.imageUrl;
+  return `${import.meta.env.VITE_BASE_URL}${slide.imageUrl}`;
+};
 
-  useEffect(() => {
-    const resetTimer = () => {
-      lastActivityRef.current = Date.now();
-
-      if (isInactiveRef.current) {
-        isInactiveRef.current = false;
-        setIsInactive(false);
-        sliderRef.current?.slickGoTo(0, true); // Force reset to first slide
-        sliderRef.current?.slickPause(); // stop autoplay
-      }
-    };
-
-    const events = ["mousemove", "keydown", "scroll", "click", "touchstart"];
-    events.forEach(event => window.addEventListener(event, resetTimer));
-
-    const interval = setInterval(() => {
-      if (Date.now() - lastActivityRef.current > inactivityTimeout) {
-        isInactiveRef.current = true;
-        setIsInactive(true);
-      }
-    }, 1000);
-
-    return () => {
-      events.forEach(event => window.removeEventListener(event, resetTimer));
-      clearInterval(interval);
-    };
-  }, []);
-
-
-  // Inactivity and Autoplay Logic (kept the same, assuming it's working for you)
-  useEffect(() => {
-    const resetTimer = () => {
-      setLastActivity(Date.now());
-      if (isInactive) {
-        setIsInactive(false);
-        // Go back to first slide when user becomes active again
-        sliderRef.current?.slickGoTo(0);
-        // If autoplay is active on inactivity, pause it on activity
-        sliderRef.current?.slickPause();
-      }
-    };
-
-    const events = ["mousemove", "keydown", "scroll", "click", "touchstart"];
-    events.forEach((event) => window.addEventListener(event, resetTimer));
-
-    const interval = setInterval(() => {
-      if (Date.now() - lastActivity > inactivityTimeout) {
-        setIsInactive(true);
-      }
-    }, 1000);
-
-    return () => {
-      events.forEach((event) => window.removeEventListener(event, resetTimer));
-      clearInterval(interval);
-    };
-  }, [lastActivity, isInactive, inactivityTimeout]);
-
-  // Control autoplay manually
-  useEffect(() => {
-    let sliderTimer;
-    if (isInactive) {
-      // Start autoplay only if there are slides to show
-      if (allSlides.length > 1) {
-        sliderTimer = setInterval(() => {
-          sliderRef.current?.slickNext();
-        }, autoplayInterval);
-      }
-    } else {
-      clearInterval(sliderTimer);
-    }
-    return () => clearInterval(sliderTimer);
-  }, [isInactive, autoplayInterval, allSlides.length]);
-
-
+  /* ==========================
+     SLIDER CONFIG
+     ========================== */
   const bannerSettings = {
-    dots: false,
+    dots: true,
     infinite: true,
-    speed: 500,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    speed: 1000,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: false, // manual autoplay control
+    cssEase: "ease-in-out",
     pauseOnHover: false,
-    lazyLoad: 'ondemand',
+    arrows: false,
   };
 
+  /* ==========================
+     LOADING UI
+     ========================== */
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 20 }}>
         <CircularProgress />
       </Box>
     );
   }
 
-  // Only render the slider if there's at least one slide (the static one)
-  if (allSlides.length === 0) {
-    // Handle the case where the static image isn't even showing (though it should be hardcoded)
-    return <Typography variant="h5" sx={{ p: 4, textAlign: 'center' }}>No slides available.</Typography>;
+  /* ==========================
+     EMPTY SLIDER UI
+     ========================== */
+  if (!slides.length) {
+    return (
+      <Typography variant="h5" sx={{ textAlign: "center", mt: 5 }}>
+        No slides available.
+      </Typography>
+    );
   }
 
+  /* ========================================================
+     PAGE UI
+     ======================================================== */
   return (
-    <Box sx={{ overflowX: "hidden", position: "relative" }}>
-      {/* Maroon Sub Navbar */}
+    <Box sx={{ backgroundColor: "#fff", overflow: "hidden" }}>
 
-
-      {/* Hero Section with Services Overlay */}
-      <Box sx={{ position: "relative" }}>
+      {/* ==================== SLIDER (Height reduced to 300px) ==================== */}
+      <Box>
         <Slider ref={sliderRef} {...bannerSettings}>
-          {allSlides.map((slide, index) => (
-            <Box key={slide.id} sx={{ position: "relative" }}>
-              <img
-                src={getSlideImageUrl(slide)}
-                alt={`banner-${index}`}
-                style={{
-                  width: "100%",
-                  height: "600px",
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-
-              {/* Only show services overlay on the first slide */}
-              {index === 0 && (
-                <Grid
-                  container
-                  spacing={3}
-                  sx={{
-                    position: "absolute",
-                    top: "55%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: { xs: "95%", md: "90%" },
-                    maxHeight: { xs: "625px", sm: "none" }, // 500px on mobile, no limit on larger screens
-                    overflowY: { xs: "auto", sm: "visible" }, // scrollable on mobile, default on bigger screens
-                  }}
-                >
-                  {services.map((s, i) => (
-                    <Grid item size={{ xs: 12, sm: 6, md: 4 }} key={i}>
-                      <Link to={s.link_to}>
-
-                        <Card
-                          sx={{
-                            px: 1,
-                            background: "rgba(0, 0, 0, 0.5)",
-                            backdropFilter: "blur(10px)",
-                            color: "#fff",
-                            borderRadius: "24px",
-                            minHeight: "220px",
-                            textAlign: "center",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.3)",
-                          }}
-                        >
-                          <CardContent>
-
-                            <Typography variant="h6" sx={{ mb: 1, fontWeight: 700 }}>
-                              {s.icon} {(isHindi && s.title_hi) ? s.title_hi : s.title_en}
-                            </Typography>
-                            <Typography variant="body2" sx={{ mb: 2, lineHeight: 1.5 }}>
-                            {(isHindi && s.desc_hi) ? s.desc_hi : s.desc_en}
-                          </Typography>
-                          <Button
-                            component={Link}
-                            to={s.link_to}
-                            variant="contained"
-                            sx={{
-                              background: "#fff",
-                              color: "#000",
-                              borderRadius: "25px",
-                              px: 3,
-                              py: 0.5,
-                              fontWeight: 600,
-                              "&:hover": { background: "#e0e0e0" },
-                            }}
-                          >
-                            {(isHindi && s.btn_hi) ? s.btn_hi : s.btn_en}                          </Button>
-                          </CardContent>
-                        </Card>
-                      </Link>
-
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </Box>
+          {slides.map((s, i) => (
+            <img
+              key={i}
+              src={getSlideImageUrl(s)}
+              style={{
+                width: "100%",
+                height: "300px",
+                objectFit: "cover",
+              }}
+            />
           ))}
         </Slider>
       </Box>
-    </Box >
+
+      {/* ==================== INTRO TEXT ==================== */}
+      <Container maxWidth="md" sx={{ textAlign: "center", py: 6 }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold", color: "#e57300" }}>
+          Madhya Pradesh State Rural Livelihoods Mission - MPSRLM
+        </Typography>
+
+        <Typography sx={{ mt: 2, mb: 4, fontSize: "1.1rem" }}>
+          The mandate of MoRD, GoI is rural poverty alleviation…
+        </Typography>
+
+        <Button variant="contained" to="/mpsrlm" component={Link} sx={{ backgroundColor: "#f44336" }}>
+          Read More
+        </Button>
+      </Container>
+
+      {/* ======================================================
+         SECTION 1: LEADERS + SERVICES + NEWS
+         ====================================================== */}
+      <Container maxWidth="xl" sx={{ display: "flex", gap: 4, flexWrap: "wrap", py: 5 }}>
+
+        {/* ⭐ UPDATED LEADERS SECTION */}
+        <Box sx={{ flex: 1, display: "flex", gap: 3 }}>
+          {leaderSlides.map((img, i) => (
+            <Card key={i} sx={{ width: 260, boxShadow: 4 }}>
+              <img
+                src={getSlideImageUrl(img)}
+                style={{ width: "100%", height: "240px", objectFit: "cover" }}
+              />
+              <CardContent sx={{ textAlign: "center" }}>
+                <Typography fontWeight={700}>
+                  {i === 0 ? "Shri Narendra Modi" : "Dr. Mohan Yadav"}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#555" }}>
+                  {i === 0
+                    ? "Hon’ble Prime Minister of India"
+                    : "Hon’ble Chief Minister of MP"}
+                </Typography>
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
+
+        {/* SERVICES */}
+        <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}>
+          {serviceList.map((srv, i) => (
+            <Button
+              key={i}
+              fullWidth
+              onClick={() => navigate(srv.path)}
+              sx={{
+                backgroundColor: srv.color,
+                color: "white",
+                fontWeight: 600,
+              }}
+            >
+              {srv.title}
+            </Button>
+          ))}
+        </Box>
+
+        {/* NEWS */}
+        <Box sx={{ flex: 1, border: "1px solid #00695c", borderRadius: 2, overflow: "hidden" }}>
+          <Box sx={{ backgroundColor: "#00695c", color: "#fff", p: 1 }}>
+            News
+          </Box>
+
+          <Box sx={{ height: "320px", overflow: "hidden", position: "relative" }}>
+            <Box
+              sx={{
+                position: "absolute",
+                width: "100%",
+                animation: "scrollInside 15s linear infinite",
+                p: 2,
+              }}
+            >
+              {newsItems.map((n, i) => (
+                <Typography key={i} sx={{ mb: 1 }}>
+                  {n}
+                </Typography>
+              ))}
+            </Box>
+          </Box>
+
+          <Box sx={{ textAlign: "right", p: 1 }}>
+            <Button size="small" component={Link} to="/news">
+              View All
+            </Button>
+          </Box>
+        </Box>
+
+        <style>
+          {`
+            @keyframes scrollInside {
+              0% { top: 100%; }
+              100% { top: -100%; }
+            }
+          `}
+        </style>
+
+      </Container>
+
+      {/* ======================================================
+         SECTION 2: TENDERS + MAP + IMPORTANT LINKS
+         ====================================================== */}
+      <Container maxWidth="xl" sx={{ display: "flex", gap: 4, py: 5, flexWrap: "wrap" }}>
+
+        {/* TENDERS */}
+        <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
+          <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>Tenders</Box>
+          <Box sx={{ p: 2 }}>
+            📄 Regarding taking commercial/institutional space on rent…
+          </Box>
+        </Box>
+
+        {/* MAP */}
+        <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
+          <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>
+            District Selection
+          </Box>
+          <Box sx={{ p: 2, textAlign: "center" }}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Madhya_Pradesh_map.png"
+              style={{ width: "100%", height: 290, objectFit: "contain" }}
+            />
+          </Box>
+        </Box>
+
+        {/* IMPORTANT LINKS */}
+        <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
+          <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>
+            Important Links
+          </Box>
+
+          <Box>
+            {importantLinks.map((lnk, i) => (
+              <Button
+                key={i}
+                fullWidth
+                sx={{
+                  backgroundColor: i % 2 === 0 ? "#00695c" : "#f57c00",
+                  color: "#fff",
+                  fontWeight: 600,
+                  justifyContent: "flex-start",
+                  mt: 0.5
+                }}
+              >
+                {lnk}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+
+      </Container>
+
+      {/* =================== YOUTUBE + PROGRAMS + NEWSLETTER SECTION =================== */}
+      <Container
+        maxWidth="xl"
+        sx={{
+          py: 6,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "stretch",
+          gap: 4,
+          flexWrap: "wrap",
+        }}
+      >
+
+        {/* ===== Left: YouTube ===== */}
+        <Box
+          sx={{
+            flex: 1,
+            border: "2px solid #d32f2f",
+            borderRadius: "4px",
+            minWidth: "300px",
+            backgroundColor: "#fff",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "#d32f2f",
+              color: "#fff",
+              px: 2,
+              py: 1,
+              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <img src="https://img.icons8.com/color/20/youtube-play.png" />
+            Youtube
+          </Box>
+
+          <Box
+            sx={{
+              p: 2,
+              textAlign: "center",
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                backgroundColor: "#eee",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: "4px",
+              }}
+            >
+              <img
+                src="https://icons.iconarchive.com/icons/google/noto-emoji-objects/256/62998-broken-image-icon.png"
+                alt="Not Found"
+                width="60"
+              />
+            </Box>
+          </Box>
+        </Box>
+
+        {/* ===== Middle: MP-SRLM Programs ===== */}
+        <Box
+          sx={{
+            flex: 1,
+            border: "2px solid #f57c00",
+            borderRadius: "4px",
+            minWidth: "300px",
+            backgroundColor: "#fff",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "#f57c00",
+              color: "#fff",
+              px: 2,
+              py: 1,
+              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <img src="https://img.icons8.com/ios-filled/20/news.png" />
+            MP- SRLM Programs
+          </Box>
+
+          <Box sx={{ p: 2, flex: 1 }}>
+            {[
+              "SOCIAL MOBILIZATION",
+              "FINANCIAL INCLUSION",
+              "LIVELIHOODS PROMOTION",
+              "TRAINING AND CAPACITY BUILDING",
+              "RSETI",
+            ].map((item, index) => (
+              <Typography
+                key={index}
+                sx={{
+                  p: 1,
+                  borderBottom: "1px solid #eee",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  fontSize: "0.95rem",
+                }}
+              >
+                <span style={{ color: "green", fontWeight: "bold" }}>✔</span>
+                {item}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
+
+        {/* ===== Right: Newsletter ===== */}
+        <Box
+          sx={{
+            flex: 1,
+            border: "2px solid #00897b",
+            borderRadius: "4px",
+            minWidth: "300px",
+            backgroundColor: "#fff",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "#00897b",
+              color: "#fff",
+              px: 2,
+              py: 1,
+              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <img src="https://img.icons8.com/ios-filled/20/news.png" />
+            NewsLetter
+          </Box>
+
+          <Box sx={{ p: 2, flex: 1 }}>
+            <Typography
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                color: "#555",
+                fontSize: "0.95rem",
+              }}
+            >
+              <img src="https://img.icons8.com/office/20/news.png" />
+              News Letter will be available soon.
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              borderTop: "1px solid #00897b",
+              textAlign: "center",
+              p: 1,
+              backgroundColor: "#f8f8f8",
+            }}
+          >
+            <Button size="small" sx={{ color: "#f57c00" }}>
+              View All
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+
+      {/* CSS for News Scroll */}
+      <style>
+        {`
+        @keyframes scrollUp {
+          0% { transform: translateY(100%); }
+          100% { transform: translateY(-100%); }
+        }
+        `}
+      </style>
+
+    </Box>
   );
 };
 
-export default HomePage;
+export default Home;
+
+
+
