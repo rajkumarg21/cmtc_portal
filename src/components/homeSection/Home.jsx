@@ -12,14 +12,18 @@ import {
   CircularProgress,
   Container,
   Card,
-  CardContent
+  CardContent,List, ListItem, ListItemIcon, ListItemText 
 } from "@mui/material";
-
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import { getFileSize } from "../../utils/fileUtils";
+import { getPublishedTenders } from "../../services/tenderService";
+import { getPublishedNewsArticles } from "../../services/newsService";
 import { getAllCarouselSlidesPublic } from "../../services/carouselService";
+// Local fallback image from repo assets (ensures default slide exists)
+import srlmMain from "../../assets/images/mpmadhyamPics.png";
 import { Link, useNavigate } from "react-router-dom";
 
 /* ==========================
@@ -70,19 +74,34 @@ const Home = () => {
   const [leaderSlides, setLeaderSlides] = useState([]);  // ⭐ NEW STATE
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [tenders, setTenders] = useState([]);
+  const [sizes, setSizes] = useState({});
+  const [newsList, setNewsList] = useState([]);
 
   /* ==========================
      FETCH SLIDES + ADD DEFAULT FIRST SLIDE
      ========================== */
+
+     useEffect(() => {
+  (async () => {
+    try {
+      const data = await getPublishedNewsArticles();
+      setNewsList(data);
+    } catch (e) {
+      console.error("Error loading news:", e);
+      setNewsList([]);
+    }
+  })();
+}, []);
   useEffect(() => {
     const loadSlides = async () => {
       try {
         const res = await getAllCarouselSlidesPublic();
         const backendSlides = res.data || [];   // ⭐ DO NOT SLICE
 
-        // ⭐ Default first slide (public folder)
+        // ⭐ Default first slide (local asset fallback)
         const defaultSlide = {
-          imageUrl: "/images/srlm_main.png",
+          imageUrl: srlmMain,
         };
 
         // ⭐ Slider = static first + ALL backend slides
@@ -93,7 +112,7 @@ const Home = () => {
         // ⭐ Leaders = FIRST TWO backend slides ONLY
         setLeaderSlides(backendSlides.slice(0, 2));
       } catch (err) {
-        setSlides([{ imageUrl: "/images/srlm_main.png" }]);
+  setSlides([{ imageUrl: srlmMain }]);
         setLeaderSlides([]);
       } finally {
         setLoading(false);
@@ -109,6 +128,22 @@ const Home = () => {
       setTimeout(() => sliderRef.current.slickPlay(), 1000);
     }
   }, [slides]);
+
+  useEffect(() => {
+    (async () => {
+      const data = await getPublishedTenders();
+      setTenders(data);
+
+     // fetch file size for each attachment
+      const sizeMap = {};
+      for (const t of data) {
+        if (t.attachmentUrl) {
+          sizeMap[t.id] = await getFileSize(t.attachmentUrl);
+        }
+      }
+      setSizes(sizeMap);
+    })();
+  }, []);
 
   /* Slide URL formatter */
   const getSlideImageUrl = (slide) => {
@@ -254,11 +289,11 @@ const Home = () => {
                 p: 2,
               }}
             >
-              {newsItems.map((n, i) => (
-                <Typography key={i} sx={{ mb: 1 }}>
-                  {n}
-                </Typography>
-              ))}
+              {newsList.map((item) => (
+  <Typography key={item.id} sx={{ mb: 1, fontSize: "0.95rem" }}>
+    📄 {item.titleEnglish}
+  </Typography>
+))}
             </Box>
           </Box>
 
@@ -287,11 +322,32 @@ const Home = () => {
 
         {/* TENDERS */}
         <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
-          <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>Tenders</Box>
-          <Box sx={{ p: 2 }}>
-            📄 Regarding taking commercial/institutional space on rent…
-          </Box>
-        </Box>
+      <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>
+        Tenders
+      </Box>
+
+      <Box sx={{ p: 2 }}>
+        <List>
+          {tenders.map((tender) => (
+            <ListItem
+              key={tender.id}
+              button
+              component="a"
+              href={tender.attachmentUrl}
+              target="_blank"
+            >
+              <ListItemIcon>
+                <PictureAsPdfIcon sx={{ color: "#d32f2f" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={tender.titleEnglish}
+                secondary={`File size: ${sizes[tender.id] || "Loading..."}`}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Box>
 
         {/* MAP */}
         <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>

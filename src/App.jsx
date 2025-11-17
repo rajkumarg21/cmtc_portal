@@ -6,6 +6,8 @@ import { ToastContainer } from 'react-toastify';
 import Home from './components/homeSection/Home';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import LoadingSpinner from './components/ui/LoadingSpinner';
+import NewsListPage from './pages/public/NewsListPage';
+import NewsDetailPage from './pages/public/NewsDetailPage'
 import LoginPage from './pages/auth/LoginPage';
 //import SignupPage from './pages/auth/SignUp';
 import NotFoundPage from './pages/NotFoundPage';
@@ -44,6 +46,9 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
+
+          <Route path="/news" element={<NewsListPage />} />
+          <Route path="/news/:id" element={<NewsDetailPage />} />
           {/* Catch-all for 404 */}
           <Route path="*" element={<NotFoundPage />} />
           <Route path="/error" element={<NotFoundPage />} />

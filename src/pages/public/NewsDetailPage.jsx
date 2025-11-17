@@ -21,7 +21,7 @@ import {
   getPublishedNewsArticleById,
   getLatestPublishedNews,
 } from "../../services/newsService";
-import PageHeader from "../../components/public/Common/PageHeader";
+import PageHeader from "../../components/public/Comman/PageHeader";
 import { useTranslation } from "react-i18next";
 
 const placeholderArticle = {
