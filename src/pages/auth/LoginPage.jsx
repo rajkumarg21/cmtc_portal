@@ -51,6 +51,13 @@ const LoginPage = () => {
         toast.success('logged in successfully !');
        setCaptchaInput(""); 
         captchaRef.current?.refreshCaptcha();
+        if (userRole === "PORTAL_ADMIN") {
+            navigate("/admin/dashboard");
+          } else if (userRole === "EDITOR" || userRole === "PUBLISHER") {
+            navigate("/cms/dashboard");
+          } else {
+            navigate("/");
+          }
       } catch (err) {
         const status = err.response?.status;
         const data = err.response?.data;
@@ -168,7 +175,6 @@ const LoginPage = () => {
 
           <form onSubmit={handleSubmit}>
             <Stack spacing={3}>
-              {/* {stage === 'login' && ( */}
                 <>
                   <TextField
                     label="Username"
@@ -233,28 +239,7 @@ const LoginPage = () => {
                   </Box>
                 </>
               
-                   {/* }) */}
-              {/* {stage === 'otp' && (
-                <TextField
-                  label="Enter OTP"
-                  variant="outlined"
-                  fullWidth
-                  required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: 3,
-                      background: '#fff',
-                    },
-                    '& .Mui-focused fieldset': {
-                      borderColor: '#3B82F6',
-                      borderWidth: 2,
-                    },
-                  }}
-                />
-              )} */}
-
+                  
               <LoadingButton
                 type="submit"
                 variant="contained"

@@ -22,9 +22,20 @@ import { getFileSize } from "../../utils/fileUtils";
 import { getPublishedTenders } from "../../services/tenderService";
 import { getPublishedNewsArticles } from "../../services/newsService";
 import { getAllCarouselSlidesPublic } from "../../services/carouselService";
+import {getPublishedCirculars} from "../../services/circularService";
 // Local fallback image from repo assets (ensures default slide exists)
-import srlmMain from "../../assets/images/mpmadhyamPics.png";
+//import srlmMain from "../../assets/images/mpmadhyamPics.png";
 import { Link, useNavigate } from "react-router-dom";
+import { getYoutubePublic } from "../../services/youtubeService";
+import { getImportantLinks } from "../../services/importantLinkService.js";
+import defaultBanner from "../../assets/images/DefaultBanner.png"
+import { getPublicPhoto } from "../../services/photoService.js";
+import GeoMap from "../map/GeoMap";
+//import MpMap from "../map/MpMap";
+import { getBackendFileUrl } from "../../utils/urlUtils";
+import mpDistricts from "../../assets/map/mp-district.json";
+//import L from "leaflet";
+
 
 /* ==========================
    STATIC SERVICE BUTTONS
@@ -38,51 +49,42 @@ const serviceList = [
   { title: "Annual Action Plan", color: "#f57c00", path: "/advertisementSectionList" },
 ];
 
-/* ==========================
-   STATIC NEWS ITEMS
-   ========================== */
-const newsItems = [
-  "📄 List of MCLF [Advertisements]",
-  "📄 MCLF Selection Criteria [Advertisements]",
-  "📄 Requirement of resources in cluster association [Advertisements]",
-  "📄 SHG Product Promotion Initiatives",
-  "📄 Rural Development Updates",
-];
 
-/* ==========================
-   STATIC IMPORTANT LINKS
-   ========================== */
-const importantLinks = [
-  "MODEL CLF DATA ENTRY",
-  "VIDYUT SAKHI",
-  "PFMS",
-  "IPRP",
-  "CADER REGISTRATION & ICRP FEEDING PORTAL",
-  "BC SAKHI AND CBO",
-  "1-NEW SHG REGISTRATION ,2-BANK SAKHI PORTAL,3-DRY RASHON PORTAL",
-  "RURAL SOFT",
-  "NRLM MIS PORTAL",
-  "DAY-NRLM WEBSITE & OTHER STATE SRLM WEBSITES",
-];
-
-/* ========================================================
-   MAIN COMPONENT
-   ======================================================== */
 const Home = () => {
   const sliderRef = useRef(null);
   const [slides, setSlides] = useState([]);
-  const [leaderSlides, setLeaderSlides] = useState([]);  // ⭐ NEW STATE
+  const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [tenders, setTenders] = useState([]);
   const [sizes, setSizes] = useState({});
   const [newsList, setNewsList] = useState([]);
+  const [newsLetter,setNewsLetter] = useState([]);
+  const [youtubeVideos, setYoutubeVideos] = useState([]);
+  const [isPaused, setIsPaused] = useState(false);
+  const [importantLinks, setImportantLinks] = useState([]);
+  
+
+
+useEffect(() => {
+  (async () => {
+    try {
+      const data = await getPublicPhoto();  // NEW service
+      const list = Array.isArray(data) ? data : data?.data || [];
+      setPhotos(list.slice(0, 2));         // take first 2
+    } catch (e) {
+      console.error("Photo load error", e);
+      setPhotos([]);
+    }
+  })();
+}, []);
+
 
   /* ==========================
      FETCH SLIDES + ADD DEFAULT FIRST SLIDE
      ========================== */
 
-     useEffect(() => {
+useEffect(() => {
   (async () => {
     try {
       const data = await getPublishedNewsArticles();
@@ -93,34 +95,43 @@ const Home = () => {
     }
   })();
 }, []);
-  useEffect(() => {
-    const loadSlides = async () => {
-      try {
-        const res = await getAllCarouselSlidesPublic();
-        const backendSlides = res.data || [];   // ⭐ DO NOT SLICE
 
-        // ⭐ Default first slide (local asset fallback)
-        const defaultSlide = {
-          imageUrl: srlmMain,
-        };
+ useEffect(() => {
+  (async () => {
+    try {
+      const data = await getPublishedCirculars();
+      setNewsLetter(data);
+    } catch (e) {
+      console.error("Error loading news:", e);
+      setNewsLetter([]);
+    }
+  })();
+}, []);
 
-        // ⭐ Slider = static first + ALL backend slides
-        // setSlides([defaultSlide, ...backendSlides]);
-        setSlides([defaultSlide]);   // ⭐ ONLY default slide will show
+ useEffect(() => {
+  const loadSlides = async () => {
+    try {
+      const res = await getAllCarouselSlidesPublic();
 
+      const backendSlides =
+        res.data?.data ||
+        res.data?.content ||
+        res.data ||
+        [];
 
-        // ⭐ Leaders = FIRST TWO backend slides ONLY
-        setLeaderSlides(backendSlides.slice(0, 2));
-      } catch (err) {
-  setSlides([{ imageUrl: srlmMain }]);
-        setLeaderSlides([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+      setSlides(backendSlides);
 
-    loadSlides();
-  }, []);
+    } catch (err) {
+      console.error("Slider load error:", err);
+      setSlides([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadSlides();
+}, []);
+
 
   /* Auto-start autoplay after load */
   useEffect(() => {
@@ -145,13 +156,46 @@ const Home = () => {
     })();
   }, []);
 
-  /* Slide URL formatter */
-  const getSlideImageUrl = (slide) => {
+  useEffect(() => {
+  getYoutubePublic()
+    .then((res) => {
+      console.log("YT DATA:", res.data);
+      setYoutubeVideos(res.data);
+    })
+    .catch((err) => {
+      console.error("YouTube load error:", err);
+      setYoutubeVideos([]);
+    });
+}, []);
+
+useEffect(() => {
+  (async () => {
+    try {
+       const data= await getImportantLinks();
+      setImportantLinks(data);
+    } catch (e) {
+      console.error("Error loading news:", e);
+      setImportantLinks([]);
+    }
+  })();
+}, []);
+
+
+  /* Slide URL formatter — FIXED */
+const getSlideImageUrl = (slide) => {
   if (!slide?.imageUrl) return "";
-  if (slide.imageUrl.startsWith("http")) return slide.imageUrl;
-  if (slide.imageUrl.startsWith("/")) return slide.imageUrl;
-  return `${import.meta.env.VITE_BASE_URL}${slide.imageUrl}`;
+
+  const url = slide.imageUrl.trim();
+
+  // If already absolute
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  // ALWAYS prefix backend base URL
+  return `${import.meta.env.VITE_BASE_URL}${url}`;
 };
+
 
   /* ==========================
      SLIDER CONFIG
@@ -183,13 +227,13 @@ const Home = () => {
   /* ==========================
      EMPTY SLIDER UI
      ========================== */
-  if (!slides.length) {
-    return (
-      <Typography variant="h5" sx={{ textAlign: "center", mt: 5 }}>
-        No slides available.
-      </Typography>
-    );
-  }
+  // if (!slides.length) {
+  //   return (
+  //     <Typography variant="h5" sx={{ textAlign: "center", mt: 5 }}>
+  //       No slides available.
+  //     </Typography>
+  //   );
+  // }
 
   /* ========================================================
      PAGE UI
@@ -197,23 +241,27 @@ const Home = () => {
   return (
     <Box sx={{ backgroundColor: "#fff", overflow: "hidden" }}>
 
-      {/* ==================== SLIDER (Height reduced to 300px) ==================== */}
-      <Box>
-        <Slider ref={sliderRef} {...bannerSettings}>
-          {slides.map((s, i) => (
-            <img
-              key={i}
-              src={getSlideImageUrl(s)}
-              style={{
-                width: "100%",
-                height: "300px",
-                objectFit: "cover",
-              }}
-            />
-          ))}
-        </Slider>
-      </Box>
-
+      {/* ==================== SLIDER WITH FALLBACK ==================== */}
+              <Box className="home-slider-wrapper">
+                {slides.length > 0 ? (
+                  <Slider ref={sliderRef} {...bannerSettings}>
+                    {slides.map((s, i) => (
+                      <img
+                        key={i}
+                        src={getSlideImageUrl(s)}
+                        className="home-slider-image"
+                      />
+                    ))}
+                  </Slider>
+                ) : (
+                  <img
+                    src={defaultBanner}
+                    className="home-slider-image"
+                    style={{ objectFit: "cover" }}
+                    alt="Default Banner"
+                  />
+                )}
+              </Box>
       {/* ==================== INTRO TEXT ==================== */}
       <Container maxWidth="md" sx={{ textAlign: "center", py: 6 }}>
         <Typography variant="h6" sx={{ fontWeight: "bold", color: "#e57300" }}>
@@ -234,45 +282,59 @@ const Home = () => {
          ====================================================== */}
       <Container maxWidth="xl" sx={{ display: "flex", gap: 4, flexWrap: "wrap", py: 5 }}>
 
-        {/* ⭐ UPDATED LEADERS SECTION */}
-        <Box sx={{ flex: 1, display: "flex", gap: 3 }}>
-          {leaderSlides.map((img, i) => (
-            <Card key={i} sx={{ width: 260, boxShadow: 4 }}>
-              <img
-                src={getSlideImageUrl(img)}
-                style={{ width: "100%", height: "240px", objectFit: "cover" }}
-              />
-              <CardContent sx={{ textAlign: "center" }}>
-                <Typography fontWeight={700}>
-                  {i === 0 ? "Shri Narendra Modi" : "Dr. Mohan Yadav"}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#555" }}>
-                  {i === 0
-                    ? "Hon’ble Prime Minister of India"
-                    : "Hon’ble Chief Minister of MP"}
-                </Typography>
-              </CardContent>
-            </Card>
-          ))}
-        </Box>
+          {/* ⭐ LEADERS SECTION (FROM PUBLIC API) */}
+              <Box sx={{ flex: 1, display: "flex", gap: 3 }}>
+                 {photos.map((p) => (
+                    <Card key={p.id} sx={{ width: 260, boxShadow: 4 }}>
+                      
+                      <img
+                          src={`${import.meta.env.VITE_BASE_URL.replace(/\/$/, "")}${p.imageUrl}`}
+                          alt={p.name}
+                          style={{
+                            width: "100%",
+                            height: "240px",
+                            objectFit: "cover",
+                          }}
+                      />
+                      <CardContent sx={{ textAlign: "center" }}>
+                        <Typography fontWeight={700}>{p.name}</Typography>
+                        <Typography variant="body2" sx={{ color: "#555" }}>
+                          {p.designation}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Box>
 
         {/* SERVICES */}
-        <Box sx={{ flex: 1, display: "flex", flexDirection: "column", gap: 1 }}>
-          {serviceList.map((srv, i) => (
-            <Button
-              key={i}
-              fullWidth
-              onClick={() => navigate(srv.path)}
-              sx={{
-                backgroundColor: srv.color,
-                color: "white",
-                fontWeight: 600,
-              }}
-            >
-              {srv.title}
-            </Button>
-          ))}
-        </Box>
+              <Box
+                sx={{
+                  flex: 1,
+                  border: "1px solid #00897b",   // 🔥 Add border
+                  borderRadius: 2,               // 🔥 Rounded corners
+                  p: 2,                          // 🔥 Padding inside the card
+                  backgroundColor: "#fff",       // Optional: same as other cards
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 1
+                }}
+              >
+                {serviceList.map((srv, i) => (
+                  <Button
+                    key={i}
+                    fullWidth
+                    onClick={() => navigate(srv.path)}
+                    sx={{
+                      backgroundColor: srv.color,
+                      color: "white",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {srv.title}
+                  </Button>
+                ))}
+              </Box>
+
 
         {/* NEWS */}
         <Box sx={{ flex: 1, border: "1px solid #00695c", borderRadius: 2, overflow: "hidden" }}>
@@ -325,15 +387,14 @@ const Home = () => {
       <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>
         Tenders
       </Box>
-
-      <Box sx={{ p: 2 }}>
+      {/* <Box sx={{ p: 2 }}>
         <List>
           {tenders.map((tender) => (
             <ListItem
               key={tender.id}
               button
               component="a"
-              href={tender.attachmentUrl}
+              href={getBackendFileUrl(tender.attachmentUrl)}
               target="_blank"
             >
               <ListItemIcon>
@@ -346,21 +407,83 @@ const Home = () => {
             </ListItem>
           ))}
         </List>
-      </Box>
+      </Box> */}
+
+      <Box
+  sx={{
+    p: 2,
+    height: 250,
+    overflow: "hidden",
+    position: "relative",
+  }}
+  onMouseEnter={() => setIsPaused(true)}
+  onMouseLeave={() => setIsPaused(false)}
+>
+  <Box
+    sx={{
+      position: "absolute",
+      width: "100%",
+      animation: isPaused ? "none" : "scrollTenderUp 12s linear infinite",
+    }}
+  >
+    <List>
+      {tenders.map((tender) => (
+        <ListItem
+          key={tender.id}
+          button
+          component="a"
+          href={getBackendFileUrl(tender.attachmentUrl)}
+          target="_blank"
+          sx={{ cursor: "pointer" }}
+        >
+          <ListItemIcon>
+            <PictureAsPdfIcon sx={{ color: "#d32f2f" }} />
+          </ListItemIcon>
+
+          <ListItemText
+            primary={tender.titleEnglish}
+            secondary={`File size: ${sizes[tender.id] || "Loading..."}`}
+          />
+        </ListItem>
+      ))}
+    </List>
+  </Box>
+
+  <style>
+    {`
+      @keyframes scrollTenderUp {
+        0% { top: 100%; }
+        100% { top: -100%; }
+      }
+    `}
+  </style>
+</Box>
     </Box>
 
-        {/* MAP */}
-        <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
-          <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>
-            District Selection
-          </Box>
-          <Box sx={{ p: 2, textAlign: "center" }}>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Madhya_Pradesh_map.png"
-              style={{ width: "100%", height: 290, objectFit: "contain" }}
-            />
-          </Box>
-        </Box>
+   {/* MAP */}
+
+<Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
+  <Box sx={{ backgroundColor: "#00897b", color: "#fff", p: 1 }}>
+    District Selection
+  </Box>
+
+  {/* Replace IMG with GeoMap */}
+  <Box sx={{ p: 2 }}>
+    <GeoMap
+      title="Districts of Madhya Pradesh"
+      data={mpDistricts}
+      height="390px"
+      featureIdKey="dist_cd"
+      featureNameKey="dist_nm_e"
+      defaultColor="#BBDEFB"
+      hoverColor="#64B5F6"
+      strokeColor="#0D47A1"
+      onFeatureClick={(district_name) => navigate(`/district/${district_name}`)}
+    />
+  </Box>
+</Box>
+
+        
 
         {/* IMPORTANT LINKS */}
         <Box sx={{ flex: 1, border: "1px solid #00897b", borderRadius: 2 }}>
@@ -369,10 +492,15 @@ const Home = () => {
           </Box>
 
           <Box>
-            {importantLinks.map((lnk, i) => (
+           {importantLinks.map((lnk, i) => (
               <Button
-                key={i}
+                key={lnk.id}
                 fullWidth
+                component="a"
+                href={lnk.url}
+                target="_blank"
+                rel="noopener noreferrer"
+               
                 sx={{
                   backgroundColor: i % 2 === 0 ? "#00695c" : "#f57c00",
                   color: "#fff",
@@ -381,9 +509,10 @@ const Home = () => {
                   mt: 0.5
                 }}
               >
-                {lnk}
+                {lnk.title}
               </Button>
             ))}
+
           </Box>
         </Box>
 
@@ -403,62 +532,109 @@ const Home = () => {
       >
 
         {/* ===== Left: YouTube ===== */}
-        <Box
-          sx={{
-            flex: 1,
-            border: "2px solid #d32f2f",
-            borderRadius: "4px",
-            minWidth: "300px",
-            backgroundColor: "#fff",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: "#d32f2f",
-              color: "#fff",
-              px: 2,
-              py: 1,
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            <img src="https://img.icons8.com/color/20/youtube-play.png" />
-            Youtube
-          </Box>
-
-          <Box
-            sx={{
-              p: 2,
-              textAlign: "center",
-              flex: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+        {/* ======================= YOUTUBE SLIDER SECTION ======================= */}
             <Box
               sx={{
-                width: "100%",
-                height: "100%",
-                backgroundColor: "#eee",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                flex: 1,
+                border: "2px solid #d32f2f",
                 borderRadius: "4px",
+                minWidth: "300px",
+                backgroundColor: "#fff",
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden"
               }}
             >
-              <img
-                src="https://icons.iconarchive.com/icons/google/noto-emoji-objects/256/62998-broken-image-icon.png"
-                alt="Not Found"
-                width="60"
-              />
+              {/* Header */}
+              <Box
+                sx={{
+                  backgroundColor: "#d32f2f",
+                  color: "#fff",
+                  px: 2,
+                  py: 1,
+                  fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                }}
+              >
+                <img src="https://img.icons8.com/color/20/youtube-play.png" />
+                Youtube
+              </Box>
+
+              {/* Slider Container */}
+              <Box sx={{ p: 2, overflow: "hidden", position: "relative" }}>
+                {youtubeVideos.length === 0 ? (
+                  <Typography sx={{ textAlign: "center", py: 4, color: "#777" }}>
+                    No videos available.
+                  </Typography>
+                ) : (
+                  <Box className="yt-slider-track">
+                    {youtubeVideos.map((v) => (
+                      <a
+                        key={v.id}
+                        href={v.youtubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="yt-card"
+                      >
+                        <img src={v.thumbnailUrl} alt={v.title} />
+                        <Typography
+                          sx={{
+                            textAlign: "center",
+                            mt: 1,
+                            fontSize: "0.85rem",
+                            fontWeight: 600,
+                            color: "#444",
+                          }}
+                        >
+                          {v.title}
+                        </Typography>
+                      </a>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+
+              {/* INLINE CSS */}
+              <style>
+                {`
+                  .yt-slider-track {
+                    display: flex;
+                    gap: 20px;
+                    animation: ytScroll 18s linear infinite;
+                    width: max-content;
+                  }
+
+                  .yt-card {
+                    min-width: 220px;
+                    text-decoration: none;
+                    color: #000;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                  }
+
+                  .yt-card img {
+                    width: 220px;
+                    height: 130px;
+                    border-radius: 6px;
+                    object-fit: cover;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                  }
+
+                  .yt-slider-track:hover {
+                    animation-play-state: paused;
+                  }
+
+                  @keyframes ytScroll {
+                    from { transform: translateX(0); }
+                    to { transform: translateX(-50%); }
+                  }
+                `}
+              </style>
             </Box>
-          </Box>
-        </Box>
+
 
         {/* ===== Middle: MP-SRLM Programs ===== */}
         <Box
@@ -514,62 +690,138 @@ const Home = () => {
           </Box>
         </Box>
 
-        {/* ===== Right: Newsletter ===== */}
+        {/* ===== Right: Newsletter (Dynamic) ===== */}
+<Box
+  sx={{
+    flex: 1,
+    border: "2px solid #00897b",
+    borderRadius: "4px",
+    minWidth: "300px",
+    backgroundColor: "#fff",
+    display: "flex",
+    flexDirection: "column",
+  }}
+>
+  {/* Header */}
+  <Box
+    sx={{
+      backgroundColor: "#00897b",
+      color: "#fff",
+      px: 2,
+      py: 1,
+      fontWeight: "bold",
+      display: "flex",
+      alignItems: "center",
+      gap: 1,
+    }}
+  >
+    <img src="https://img.icons8.com/ios-filled/20/news.png" />
+    NewsLetter
+  </Box>
+
+<Box
+  sx={{
+    p: 2,
+    flex: 1,
+    height: 250,
+    overflow: "hidden",
+    position: "relative",
+  }}
+  onMouseEnter={() => setIsPaused(true)}
+  onMouseLeave={() => setIsPaused(false)}
+>
+  {newsLetter.length === 0 ? (
+    <Typography
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        color: "#555",
+        fontSize: "0.95rem",
+      }}
+    >
+      <img src="https://img.icons8.com/office/20/news.png" />
+      No newsletters available.
+    </Typography>
+  ) : (
+    <Box
+      sx={{
+        position: "absolute",
+        width: "100%",
+        animation: isPaused ? "none" : "scrollUp 12s linear infinite",
+      }}
+    >
+      {newsLetter.map((item) => (
         <Box
+          key={item.id}
           sx={{
-            flex: 1,
-            border: "2px solid #00897b",
-            borderRadius: "4px",
-            minWidth: "300px",
-            backgroundColor: "#fff",
-            display: "flex",
-            flexDirection: "column",
+            mb: 2,
+            pb: 1,
+            borderBottom: "1px solid #eee",
+            cursor: "pointer",
           }}
-        >
-          <Box
-            sx={{
-              backgroundColor: "#00897b",
-              color: "#fff",
-              px: 2,
-              py: 1,
-              fontWeight: "bold",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            <img src="https://img.icons8.com/ios-filled/20/news.png" />
-            NewsLetter
-          </Box>
-
-          <Box sx={{ p: 2, flex: 1 }}>
-            <Typography
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                color: "#555",
-                fontSize: "0.95rem",
-              }}
-            >
-              <img src="https://img.icons8.com/office/20/news.png" />
-              News Letter will be available soon.
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              borderTop: "1px solid #00897b",
-              textAlign: "center",
-              p: 1,
-              backgroundColor: "#f8f8f8",
-            }}
-          >
-            <Button size="small" sx={{ color: "#f57c00" }}>
-              View All
-            </Button>
-          </Box>
+        
+              onClick={() => {
+                    const backendBaseUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+                    let filePath = item.attachmentUrl;
+                    if (!filePath) {
+                      alert("Attachment not found");
+                      return;
+                    }
+                    // remove any leading slashes
+                    filePath = filePath.replace(/^\/+/, "");
+                    // if filepath already contains "files/", do NOT add extra "files"
+                    if (filePath.startsWith("files/")) {
+                      // correct final URL
+                      window.open(`${backendBaseUrl}/${filePath}`, "_blank");
+                    } else {
+                      // normal path
+                      window.open(`${backendBaseUrl}/files/${filePath}`, "_blank");
+                    }
+                  }}
+         >
+          <Typography sx={{ fontWeight: 600, color: "#333" }}>
+            {item.titleEnglish}
+          </Typography>
         </Box>
+      ))}
+    </Box>
+  )}
+
+  <style>
+    {`
+      @keyframes scrollUp {
+        0% { top: 100%; }
+        100% { top: -100%; }
+      }
+    `}
+  </style>
+</Box>
+
+
+
+
+
+  {/* Footer */}
+  <Box
+    sx={{
+      borderTop: "1px solid #00897b",
+      textAlign: "center",
+      p: 1,
+      backgroundColor: "#f8f8f8",
+    }}
+  >
+    <Button
+      size="small"
+      sx={{ color: "#f57c00" }}
+      component={Link}
+      to="/circulars"
+    >
+      View All
+    </Button>
+  </Box>
+</Box>
+
       </Container>
 
       {/* CSS for News Scroll */}
@@ -582,11 +834,28 @@ const Home = () => {
         `}
       </style>
 
+      <style>
+          {`
+            .home-slider-wrapper {
+              width: 100%;
+              height: 400px !important;
+              overflow: hidden;
+            }
+
+            /* DO NOT set height on slick-slide or slick-track */
+
+            .home-slider-image {
+              width: 100% !important;
+              height: 400px !important;
+              object-fit: cover !important;
+            }
+          `}
+</style>
+
+
+
     </Box>
   );
 };
 
 export default Home;
-
-
-

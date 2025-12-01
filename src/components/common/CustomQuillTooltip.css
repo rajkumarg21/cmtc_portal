@@ -1,0 +1,116 @@
+Tooltip for toolbar buttons and pickers
+.ql-toolbar button[data-tooltip],
+.ql-toolbar .ql-picker[data-tooltip] {
+  position: relative;
+  cursor: pointer;
+}
+
+.ql-toolbar button[data-tooltip]::after,
+.ql-toolbar .ql-picker[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0,0,0,0.87);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.ql-toolbar button[data-tooltip]::before,
+.ql-toolbar .ql-picker[data-tooltip]::before {
+  content: "";
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.87) transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.ql-toolbar button[data-tooltip]:hover::after,
+.ql-toolbar .ql-picker[data-tooltip]:hover::after,
+.ql-toolbar button[data-tooltip]:hover::before,
+.ql-toolbar .ql-picker[data-tooltip]:hover::before {
+  opacity: 1;
+}
+
+/* Material Design Toolbar */
+.ql-toolbar.ql-snow {
+  background-color: #fafafa;
+  border-radius: 4px 4px 0 0;
+  padding: 6px 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08);
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ql-toolbar.ql-snow button:hover,
+.ql-toolbar.ql-snow .ql-picker:hover {
+  background-color: rgba(0,0,0,0.04);
+  color: #000;
+  border-radius: 4px;
+}
+
+.ql-toolbar.ql-snow button:focus,
+.ql-toolbar.ql-snow .ql-picker:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(63,81,181,0.2);
+}
+
+/* Material Design Editor container */
+.ql-container.ql-snow {
+  border-radius: 0 0 4px 4px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.24), 0 1px 3px rgba(0,0,0,0.16);
+  min-height: 250px;
+  max-height: 800px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.ql-container.ql-snow.ql-focused {
+  box-shadow: 0 4px 6px rgba(0,0,0,0.16), 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.ql-container.ql-snow .ql-editor {
+  padding: 16px;
+  position: relative;
+  resize: vertical;
+  overflow: auto;
+  display: block; /* keep block for proper resizing */
+  min-height: 250px;
+  max-height: 800px;
+  height: 300px; /* initial height */
+}
+
+.ql-editor img {
+  max-width: 100%;
+  height: auto;
+  display: inline-block; /* preserves float/alignment */
+}
+
+/* Custom drag handle (optional) */
+.ql-editor::after {
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+  width: 14px;
+  height: 14px;
+  background: transparent;
+  border-right: 2px solid rgba(0,0,0,0.26);
+  border-bottom: 2px solid rgba(0,0,0,0.26);
+  opacity: 0.6;
+  pointer-events: none;
+}

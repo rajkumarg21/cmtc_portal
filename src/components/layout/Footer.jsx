@@ -107,7 +107,7 @@ const Footer = ({showFull=false}) => {
               href="mailto:info@mpmadhyam.gov.in"
               style={{ color: "#cbd5e1", textDecoration: "none" }}
             >
-              info@mpmadhyam.gov.in
+              info@singaji.org.in
             </a>
           </Typography>
           <Typography variant="body2" color="grey.400" >

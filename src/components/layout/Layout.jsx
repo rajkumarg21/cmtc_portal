@@ -1,19 +1,19 @@
-//import { useAuth } from "../../context/AuthContext";
-//import AdminLayout from "./AdminLayout";
+import { useAuth } from "../../context/AuthContext";
+import AdminLayout from "./AdminLayout";
 import PublicLayout from "./PublicLayout";
 //import RojgarAndNirmanLayout from "./RojgarAndNirmanLayout";
 
 export default function Layout () {
-  //const { isAuthenticated, userRole } = useAuth();
+  const { isAuthenticated, userRole } = useAuth();
 
-//   if(isAuthenticated && window.location.pathname.startsWith('/rojgarAndNirman')){
-//     return <RojgarAndNirmanLayout/>
-//   }
+  // if(isAuthenticated && window.location.pathname.startsWith('/rojgarAndNirman')){
+  //   return <RojgarAndNirmanLayout/>
+  // }
 
-//   if (isAuthenticated && userRole === 'PORTAL_ADMIN' || userRole === 'EDITOR' || userRole === 'PUBLISHER') {
+  if (isAuthenticated && userRole === 'PORTAL_ADMIN' || userRole === 'EDITOR' || userRole === 'PUBLISHER') {
     
-//     return <AdminLayout />;
-//   }
+    return <AdminLayout />;
+  }
 
   return <PublicLayout/>;
 };
