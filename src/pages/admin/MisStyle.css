@@ -1,0 +1,36 @@
+.stat-card {
+  position: relative;
+  border-radius: 15px;
+  padding: 16px;
+  height: 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  color: white;
+}
+
+.stat-purple { background: linear-gradient(135deg, #6a5acd, #7b68ee); }
+.stat-blue   { background: linear-gradient(135deg, #2196f3, #4fc3f7); }
+.stat-green  { background: linear-gradient(135deg, #28a745, #5dd39e); }
+.stat-red    { background: linear-gradient(135deg, #e53935, #ef5350); }
+.stat-orange { background: linear-gradient(135deg, #ff9800, #ffb74d); }
+.stat-pink   { background: linear-gradient(135deg, #e53938, #f06292); }
+
+.stat-card::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 90px;
+  height: 90px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+}
+
+.custom-header{
+  font-size: 13px;
+}
+.custom-data{
+  font-size: 13px;
+}

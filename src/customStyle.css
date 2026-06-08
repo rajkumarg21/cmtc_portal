@@ -1,0 +1,287 @@
+:root {
+  --teal-primary: #0f766e;
+  --teal-light: #14b8a6;
+  --teal-soft: #e6f6f4;
+  --text-dark: #1f2937;
+  --border-soft: #e5e7eb;
+}
+.search-card {
+  background: linear-gradient(135deg, #e6f6f4, #ffffff);
+  border-left: 6px solid var(--teal-primary);
+}
+
+.search-card h4 {
+  color: var(--teal-primary);
+}
+.center-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.center-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.form-select-lg {
+  border-radius: 12px;
+}
+
+.btn {
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: scale(1.03);
+}
+/* ===============================
+   CMTC HERO SECTION
+================================ */
+
+.cmtc-hero {
+  position: relative;
+  background-image: url("./assets/images/defaultImages1.jpg"); /* change path */
+  background-size: cover;
+  background-position: center;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+}
+
+.cmtc-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55); /* black overlay */
+}
+
+.cmtc-hero-content {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+
+/* Limit width so UI doesn't stretch */
+.cmtc-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem;
+}
+
+/* Improve text contrast */
+.CMTC_Name {
+  color: #ffffff !important;
+}
+
+.hero-subtext {
+  color: #e0e0e0 !important;
+}
+.Dtext {
+  color: #ffffff !important
+  ;}
+.center-card {
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.center-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(15, 118, 110, 0.25);
+}
+.center-card img {
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+.center-card .card-body {
+  padding: 22px;
+}
+
+.center-card h5 {
+  color: var(--teal-primary);
+}
+
+.center-card p {
+  color: #4b5563;
+}
+.btn-teal {
+  background: linear-gradient(135deg, var(--teal-primary), var(--teal-light));
+  border: none;
+  color: white;
+}
+
+.btn-teal:hover {
+  background: linear-gradient(135deg, var(--teal-light), var(--teal-primary));
+  color: white;
+}
+.pagination-teal button {
+  border-color: var(--teal-primary);
+  color: var(--teal-primary);
+}
+
+.pagination-teal button:hover {
+  background: var(--teal-primary);
+  color: white;
+}
+.pagination-teal button {
+  border-color: var(--teal-primary);
+  color: var(--teal-primary);
+}
+
+.pagination-teal button:hover {
+  background: var(--teal-primary);
+  color: white;
+}
+.pagination-teal button {
+  border-color: var(--teal-primary);
+  color: var(--teal-primary);
+}
+
+.pagination-teal button:hover {
+  background: var(--teal-primary);
+  color: white;
+}
+/* ===== UNIFORM FONT SYSTEM ===== */
+.search-card h4 {
+  font-size: 1.2rem;          /* Same as dropdown */
+  font-weight: 600;
+  color: #0f766e;             /* Teal heading */
+  letter-spacing: 0.3px;
+}
+
+/* Dropdown font consistency */
+.search-card .form-select {
+  font-size: 1.1rem;          /* Reduce from bootstrap-lg */
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+}
+
+/* Dropdown option text */
+.search-card .form-select option {
+  font-size: 1.05rem;
+}
+
+/* Center card title */
+.center-card h5 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #0f766e;
+}
+
+/* Address text */
+.center-card p {
+  font-size: 0.95rem;
+}
+
+/* Teal button */
+.btn-teal {
+  background-color: #0f766e;
+  color: #fff;
+  border: none;
+}
+
+.btn-teal:hover {
+  background-color: #115e59;
+  color: #fff;
+}
+
+/* Pagination text */
+.pagination-teal span {
+  font-size: 1rem;
+}
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0f766e;
+}
+.section-title,
+.card h5,
+.card h6 {
+  color: var(--teal);
+}
+
+/* Primary buttons */
+.btn-primary {
+  background-color: var(--teal);
+  border-color: var(--teal);
+}
+
+.btn-primary:hover {
+  background-color: #0d5f58;
+  border-color: #0d5f58;
+}
+
+/* Outline teal */
+.btn-outline-primary {
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--teal);
+  color: #fff;
+}
+
+/* Cards */
+.card {
+  border-radius: 14px;
+}
+
+.card.shadow-sm {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Info badges */
+.badge.bg-info {
+  background-color: var(--teal-light) !important;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* Divider */
+hr {
+  opacity: 0.15;
+}
+.header-card {
+  background: linear-gradient(135deg, var(--teal-soft), #ffffff);
+  border-left: 5px solid var(--teal);
+}
+.thumbnail-strip img {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.thumbnail-strip img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+}
+.stats-box {
+  background: var(--teal-soft);
+  border-radius: 10px;
+  padding: 12px 8px;
+}
+.page-heading{
+    margin: 0 !important;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1.25rem !important;
+    line-height: 1.6 !important;
+    letter-spacing: 0.0075em !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 8px !important;
+}
+/* Image wrapper */
+.center-image-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Actual image */
+.center-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

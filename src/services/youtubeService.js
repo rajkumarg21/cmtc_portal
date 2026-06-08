@@ -1,37 +1,43 @@
-import axios from "axios";
+import api from "./apiService";
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+/**
+ * ===========================
+ * PUBLIC APIs
+ * ===========================
+ */
 
-// PUBLIC
+// PUBLIC — GET APPROVED VIDEOS
 export const getYoutubePublic = () => {
-  return axios.get(`${BASE_URL}/api/rojgar/public/youtube`);
+  return api.get("/rojgar/public/youtube");
 };
 
-// ADMIN — GET ALL
+/**
+ * ===========================
+ * ADMIN APIs (JWT REQUIRED)
+ * ===========================
+ */
+
+// ADMIN — GET ALL VIDEOS
 export const adminGetAllYoutube = () => {
-  return axios.get(`${BASE_URL}/api/rojgar/admin/youtube`);
+  return api.get("/rojgar/admin/youtube");
 };
 
-// ADMIN — ADD
+// ADMIN — ADD VIDEO
 export const adminAddYoutube = (data) => {
-  return axios.post(`${BASE_URL}/api/rojgar/admin/youtube`, data);
+  return api.post("/rojgar/admin/youtube", data);
 };
 
-// ADMIN — UPDATE
+// ADMIN — UPDATE VIDEO
 export const adminUpdateYoutube = (id, data) => {
-  return axios.put(`${BASE_URL}/api/rojgar/admin/youtube/${id}`, data);
+  return api.put(`/rojgar/admin/youtube/${id}`, data);
 };
 
-// ADMIN — APPROVE / REJECT
+// ADMIN — APPROVE / REJECT VIDEO
 export const adminApproveYoutube = (id, status) => {
-  return axios.put(`${BASE_URL}/api/rojgar/admin/youtube/${id}/approve/${status}`);
+  return api.put(`/rojgar/admin/youtube/${id}/approve/${status}`);
 };
 
-// export const adminApproveYoutube = (id, status) => {
-//   return axios.put(`${BASE_URL}/api/rojgar/admin/youtube/${id}/approve/${status}`);
-// };
-
-// ADMIN — DELETE
+// ADMIN — DELETE VIDEO
 export const adminDeleteYoutube = (id) => {
-  return axios.delete(`${BASE_URL}/api/rojgar/admin/youtube/${id}`);
+  return api.delete(`/rojgar/admin/youtube/${id}`);
 };

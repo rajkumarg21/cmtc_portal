@@ -1,0 +1,61 @@
+/* GalleryPage.css */
+
+.gallery-page {
+  @apply container mx-auto p-4;
+}
+
+.gallery-filters {
+  @apply flex flex-wrap gap-4 justify-center mb-6;
+}
+
+.gallery-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
+}
+
+.gallery-item-card {
+  @apply relative overflow-hidden rounded-lg shadow-lg cursor-pointer transform transition duration-300 hover:scale-105;
+  @apply bg-white dark:bg-gray-700;
+}
+
+.gallery-item-card img {
+  @apply w-full h-48 object-cover;
+}
+
+.video-thumbnail-container {
+  @apply relative;
+}
+
+.video-thumbnail-container img {
+  @apply w-full h-48 object-cover;
+}
+
+.play-icon-overlay {
+  @apply absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 text-white opacity-0 transition duration-300 hover:opacity-100;
+}
+
+.play-icon {
+  @apply text-white text-5xl;
+}
+
+.card-title {
+  @apply p-4 text-center font-semibold text-gray-800 dark:text-white;
+}
+
+/* Modal styles */
+.video-modal-overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75;
+}
+
+.video-modal-content {
+  @apply relative p-4 bg-white dark:bg-gray-800 rounded-lg shadow-xl;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.video-modal-content video {
+  @apply max-w-full max-h-full;
+}
+
+.close-button {
+  @apply absolute top-2 right-2 text-white text-2xl font-bold bg-transparent border-none cursor-pointer;
+}

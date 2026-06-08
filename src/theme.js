@@ -4,8 +4,8 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#f57c00', // Deep orange for navbar hover and highlights
-      light: '#ffa726', // Light orange for buttons
+      main: '#0f766e', // Deep orange for navbar hover and highlights
+      light: '#14b8a6', // Light orange for buttons
     },
     text: {
       primary: '#212121',

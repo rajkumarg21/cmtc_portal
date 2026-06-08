@@ -1,68 +1,81 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
+/* Custom styles or overrides if needed */
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  @apply bg-gray-50 text-gray-800; /* Apply a light background and dark text */
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Basic styling for rich text content from backend */
+.rich-text-content h1, .rich-text-content h2, .rich-text-content h3 {
+  @apply text-xl font-semibold mb-2 mt-4;
+}
+.rich-text-content p {
+  @apply mb-3 leading-relaxed;
+}
+.rich-text-content ul, .rich-text-content ol {
+  @apply list-disc list-inside mb-3;
+}
+.rich-text-content a {
+  @apply text-blue-600 hover:underline;
+}
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+}
+.leaflet-control-attribution {
+  display: none !important;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* ✅ AVAILABLE → GREEN */
+.available-date {
+  background: #1db954 !important;
+  color: white !important;
+  border-radius: 6px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* ✅ BOOKED → RED */
+.booked-date {
+  background: #dc3545 !important;
+  color: white !important;
+  border-radius: 6px;
 }
+
+/* ✅ SELECTED → BLUE */
+.selected-date {
+  background: #0d6efd !important;
+  color: white !important;
+  border-radius: 6px;
+}
+
+/* ✅ HOVER TOOLTIP */
+.calendar-tooltip {
+  display: block;
+  font-size: 10px;
+  margin-top: 3px;
+  text-align: center;
+}
+
+
+
+/* ✅ TOOLTIP BASE */
+.tooltip {
+  display: block;
+  font-size: 10px;
+  text-align: center;
+  margin-top: 3px;
+}
+
+/* ✅ TOOLTIP COLORS */
+.booked-tooltip {
+  color: #dc3545;
+}
+
+.available-tooltip {
+  color: #1db954;
+}
+
+
+

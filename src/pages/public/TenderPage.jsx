@@ -14,6 +14,8 @@ import {
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import PageHeader from "../../components/public/Common/PageHeader";
 import { useTranslation } from "react-i18next";
+import { getBackendFileUrl } from "../../utils/urlUtils";
+
 
 const themeColor = "#ff4b2b";
 
@@ -98,14 +100,10 @@ const TenderPage = () => {
                   : tender.titleEnglish?.trim() || tender.titleHindi || "Untitled";
 
                 const displayText = `${title}, ${new Date(
-                  tender.orderDate
+                  tender.tenderDate
                 ).toLocaleDateString("en-GB")}`;
 
-                const link =
-                  tender.attachmentUrl &&
-                  (tender.attachmentUrl.startsWith("http")
-                    ? tender.attachmentUrl
-                    : `${import.meta.env.VITE_BASE_URL}${tender.attachmentUrl}`);
+                                 const link = getBackendFileUrl(tender.attachmentUrl);
 
                 return (
                   <ListItem

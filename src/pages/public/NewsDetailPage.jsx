@@ -21,7 +21,7 @@ import {
   getPublishedNewsArticleById,
   getLatestPublishedNews,
 } from "../../services/newsService";
-import PageHeader from "../../components/public/Comman/PageHeader";
+import PageHeader from "../../components/public/Common/PageHeader";
 import { useTranslation } from "react-i18next";
 
 const placeholderArticle = {
@@ -50,6 +50,34 @@ const NewsDetailPage = () => {
   const [otherLoading, setOtherLoading] = useState(true);
   const { i18n } = useTranslation();
   
+
+  // fetch main article when id changes
+  // useEffect(() => { 
+  //   let mounted = true;
+  //   const fetchArticle = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const data = await getPublishedNewsArticleById(id);
+  //       if (!mounted) return;
+  //       if (data) {
+  //         setArticle({ ...placeholderArticle, ...data });
+  //       } else {
+  //         setArticle(placeholderArticle);
+  //       }
+  //     } catch (err) {
+  //       console.error("Error fetching news article:", err);
+  //       if (mounted) setArticle(placeholderArticle);
+  //     } finally {
+  //       if (mounted) setLoading(false);
+  //     }
+  //   };
+  //   fetchArticle();
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, [id]);
+
+  // fetch main article when id changes (uses router state if available to avoid double API call)
 useEffect(() => {
   let mounted = true;
   const fetchArticle = async () => {

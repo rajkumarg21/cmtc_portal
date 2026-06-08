@@ -1,0 +1,97 @@
+/* Navbar base */
+#Navbuttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0f766e;
+  padding: 0.5rem 1rem;
+}
+
+#Navbuttons .nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+}
+
+#Navbuttons .nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Hamburger button hidden on desktop */
+.menu-toggle {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* Mobile Styles */
+@media (max-width: 992px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  #Navbuttons .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #0f766e;
+    flex-direction: column;
+    display: none;
+    padding: 1rem 0;
+  }
+
+  #Navbuttons .nav-links.open {
+    display: flex;
+  }
+
+  #Navbuttons .nav-links li {
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  #Navbuttons .nav-links li a {
+    font-size: 1rem;
+  }
+}
+.header_text {
+  font-size: 1.5rem; /* default for desktop */
+}
+
+@media (max-width: 768px) {
+  .header_text {
+    font-size: 1rem; /* smaller on tablets/mobile */
+  }
+}
+
+/* Remove ugly default caret */
+.btn-login.dropdown-toggle::after {
+  display: none;
+}
+
+/* Logo sizing & centering */
+.header_user_logo {
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+  border-radius: 50%;
+  border:2px solid white;
+}
+
+/* Button reset for clean look */
+.btn-login {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+/* Optional hover polish */
+.btn-login:hover {
+  opacity: 0.85;
+}

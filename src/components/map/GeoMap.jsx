@@ -28,6 +28,7 @@ export default function GeoMap({
   title = "District Map",
   height = "350px",
   onFeatureClick = () => {},
+  centers
 }) {
 
   // Same coloring logic as V1 (works perfectly)
@@ -82,36 +83,186 @@ export default function GeoMap({
       );
     });
   };
+// Create district wise count
+const getDistrictCounts = () => {
+  if (!centers) return {};
+
+  const counts = {};
+
+  centers.forEach((c) => {
+    const key = c.districtNameEn?.toLowerCase();
+
+    if (!counts[key]) counts[key] = 0;
+
+    counts[key]++;
+  });
+
+  return counts;
+};
+const renderCenterCountMarkers = () => {
+
+  if (!data?.features || !centers) return null;
+
+  const counts = getDistrictCounts();
+
+  return data.features.map((feature, index) => {
+
+    const districtEn =
+      feature.properties?.dist_nm_e?.toLowerCase();
+
+    const count = counts[districtEn];
+
+    if (!count) return null;
+
+    const center =
+      L.geoJSON(feature).getBounds().getCenter();
+
+    return (
+      <Marker
+  key={districtEn}
+  position={center}
+  icon={L.divIcon({
+    className: "",
+    html: `
+      <div class="building-marker">
+        <div class="building-icon">🏢</div>
+        <div class="building-count">${count}</div>
+      </div>
+    `,
+    iconSize: [40, 40],      // ✅ VERY IMPORTANT
+    iconAnchor: [20, 40],    // ✅ VERY IMPORTANT
+  })}
+/>
+    );
+  });
+};
 
   return (
-    <Card sx={{ borderRadius: 3, overflow: "hidden" }}>
+    <Card sx={{ borderRadius: 1, overflow: "hidden" }}>
       <CardHeader
         title={title}
         sx={{
-          background: "#1976d2",
+          background: "#0f766e",
           color: "#fff",
           py: 1.2,
           textAlign: "center",
         }}
+        
       />
 
       <CardContent sx={{ p: 0 }}>
         {/* FIX: Use full height like Version 1 */}
-        <Box sx={{ height, width: "100%", position:"relative",zIndex:0 }}>
+        <Box sx={{ height, width: "100%", position:"relative",zIndex:0}}>
           <MapContainer
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: "90vh", width: "100%" }}
             center={[23.5, 78.5]}
             zoom={7}
-            minZoom={6}
+            minZoom={7}
             maxBoundsViscosity={1.0}   // Prevent shrinking of map
             scrollWheelZoom={false}
           >
             <GeoJSON data={data} style={style} onEachFeature={onEachFeature} />
             <FitBounds geoJson={data} />
-            {renderLabels()}
+         {renderLabels()}
+{renderCenterCountMarkers()}
           </MapContainer>
         </Box>
       </CardContent>
+<style>
+{`
+
+.district-label {
+ font-size:13px;
+ font-weight:bold;
+ color:#000;
+ text-shadow:1px 1px 3px #fff;
+ pointer-events:none;
+}
+
+
+/* BUILDING MARKER DESIGN */
+
+.building-marker{
+
+ position:relative;
+
+ display:flex;
+
+ align-items:center;
+
+ justify-content:center;
+
+}
+
+
+
+.building-icon{
+
+ font-size:10px;
+
+ background:white;
+
+ border-radius:50%;
+
+ padding:6px;
+
+ box-shadow:0 4px 10px rgba(0,0,0,0.3);
+
+ border:3px solid #0f766e;
+
+}
+
+
+.building-count{
+
+ position:absolute;
+
+ top:-6px;
+
+ right:-8px;
+
+ background:#ef4444;
+
+ color:white;
+
+ font-size:12px;
+
+ font-weight:bold;
+
+ min-width:20px;
+
+ height:20px;
+
+ display:flex;
+
+ align-items:center;
+
+ justify-content:center;
+
+ border-radius:50%;
+
+ border:2px solid white;
+
+ box-shadow:0 2px 6px rgba(0,0,0,0.4);
+
+}
+
+
+/* hover effect */
+
+.building-marker:hover .building-icon{
+
+ transform:scale(1.2);
+
+ transition:0.2s;
+
+ cursor:pointer;
+
+}
+
+
+`}
+</style>
 
       <style>
         {`

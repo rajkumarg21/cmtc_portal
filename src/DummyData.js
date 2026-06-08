@@ -31,21 +31,12 @@ export const pdfFiles = [
 
 //Important
 export const defaultHeaderLinks = [
-  { path: '/', labelKey: 'home' },
-  { path: '/gallery', labelKey: 'gallery' },
-  { path: '/rojgarAndNirman', labelKey: 'rojgar' },
-  { path: '/books', labelKey: 'books' },
-  // { path: '/rti/submit', labelKey: 'rti' },
-  // { path: '/subscriptions/new', labelKey: 'subscription' }
+  // { path: '/', labelKey: 'home' },
+  // { path: '/gallery', labelKey: 'gallery' },
+  // { path: '/books', labelKey: 'books' },
+
 ];
 
-export const RojgarNirmanSubHeaderTabs = [
-  { labelKey: 'overview', path: '/rojgarAndNirman' },
-  { labelKey: 'abhilekh', path: '/rojgarAndNirman/abhilekh' },
-  { labelKey: 'samyiki', path: '/rojgarAndNirman/samyiki' },
-  { labelKey: 'khelCharcha', path: '/rojgarAndNirman/khelCharcha' },
-  { labelKey: 'lastWeek', path: '/rojgarAndNirman/lastWeek' },
-];
 
 //marqueeItems dummy list
 export const marqueeItems = [
@@ -64,7 +55,7 @@ export const marqueeItems = [
       en: 'Check updates',
       hi: 'अपडेट देखें',
     },
-    url: '/rojgarAndNirman',
+    
   },
 ];
 

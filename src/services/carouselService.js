@@ -71,3 +71,13 @@ export const downloadCarouselFile = async (url) => {
 
 export const approveCarouselSlide = (id) => api.put(`${CAROUSEL_API_URL}/admin/${id}/approve`);
 export const rejectCarouselSlide = (id) => api.put(`${CAROUSEL_API_URL}/admin/${id}/reject`);
+
+/**
+ * ===========================
+ * 📌 Reorder Slides 
+ * ===========================
+ */
+export const reorderCarouselSlides = async (carouselSlideRequests) => {
+  const response = await api.post(`${CAROUSEL_API_URL}/admin/update-slide-order`, carouselSlideRequests);
+  return response;
+};

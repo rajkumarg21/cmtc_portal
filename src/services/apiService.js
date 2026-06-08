@@ -1,40 +1,50 @@
-import axios from 'axios';
+import axios from "axios";
+import i18n from "i18next"; // ✅ this is the key
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem('jwtToken');
+    // ✅ Attach JWT
+    const token = sessionStorage.getItem("jwtToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // ✅ Detect language
+    const language =
+      i18n?.language ||                    // i18next
+      localStorage.getItem("lang") ||      // manual storage
+      navigator.language?.split("-")[0] || // browser
+      "hi";
+
+    // ✅ Send to backend
+    config.headers["Accept-Language"] = language;
+
+    // ✅ Content-Type handling
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    } else if (!config.headers["Content-Type"]) {
+      config.headers["Content-Type"] = "application/json";
+    }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
-      console.error('API Error Response:', error.response.data);
-      console.error('Status:', error.response.status);
-      if (error.response.status === 401 || error.response.status === 403) {
-        // Handle unauthorized/forbidden access, e.g., redirect to login
-        // This could also be handled by AuthContext if it's a global logout scenario
-        console.log("Unauthorized or Forbidden. You might need to log in again.");
-      }
+      console.error("API Error:", error.response.status, error.response.data);
     } else if (error.request) {
-      console.error('API Error Request:', error.request);
+      console.error("API No Response:", error.request);
     } else {
-      console.error('API Error Message:', error.message);
+      console.error("API Setup Error:", error.message);
     }
     return Promise.reject(error);
   }

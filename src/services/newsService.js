@@ -17,10 +17,8 @@ export const getPublishedNewsArticles = async () => {
  */
 export const getPublishedNewsArticleById = async (id) => {
   const url = `${NEWS_API_URL}/public/${id}`;
-  console.log("Calling API:", url);   // 👈 log the API endpoint
 
   const response = await api.get(url);
-  console.log("API Response:", response.data);  // 👈 log response data
 
   return response.data;
 };

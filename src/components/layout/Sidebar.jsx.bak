@@ -1,0 +1,137 @@
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+const Sidebar = () => {
+  const { userRole } = useAuth();
+  const location = useLocation();
+
+  const isLinkActive = (path) => location.pathname.startsWith(path);
+
+  return (
+    <aside className="fixed top-0 left-0 h-full w-64 bg-gray-900 text-white p-4 pt-20 shadow-lg flex flex-col z-10">
+      <nav className="flex-1 space-y-2">
+        {userRole === 'PORTAL_ADMIN' && (
+          <>
+            <h3 className="text-lg font-semibold text-gray-400 mt-4 mb-2">Admin Panel</h3>
+            <Link
+              to="/admin/dashboard"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/admin/dashboard') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Dashboard
+            </Link>
+            <Link
+              to="/admin/users"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/admin/users') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              User Management
+            </Link>
+            <Link
+              to="/admin/subscriptions"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/admin/subscriptions') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Subscriptions
+            </Link>
+            <Link
+              to="/admin/contact-messages"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/admin/contact-messages') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Contact Messages
+            </Link>
+            <Link
+              to="/admin/feedback"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/admin/feedback') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Feedback
+            </Link>
+         
+          </>
+        )}
+
+        {(userRole === 'EDITOR' || userRole === 'PUBLISHER' || userRole === 'PORTAL_ADMIN') && (
+          <>
+            <h3 className="text-lg font-semibold text-gray-400 mt-4 mb-2">CMS Management</h3>
+            <Link
+              to="/cms/dashboard"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/dashboard') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              CMS Dashboard
+            </Link>
+            <Link
+              to="/cms/news"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/news') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              News Articles
+            </Link>
+            <Link
+              to="/cms/circulars"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/circulars') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Circulars & Orders
+            </Link>
+            <Link
+              to="/cms/pages"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/pages') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Static Pages
+            </Link>
+            <Link
+              to="/cms/gallery"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/gallery') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Gallery
+            </Link>
+            <Link
+              to="/cms/books"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/books') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Books
+            </Link>
+            <Link
+              to="/cms/authors"
+              className={`block py-2 px-4 rounded-md transition-colors ${
+                isLinkActive('/cms/authors') ? 'bg-blue-700' : 'hover:bg-gray-700'
+              }`}
+            >
+              Books Authors
+            </Link>
+            {(userRole === 'PUBLISHER' || userRole === 'PORTAL_ADMIN') && (
+              <Link
+                to="/cms/approvals"
+                className={`block py-2 px-4 rounded-md transition-colors ${
+                  isLinkActive('/cms/approvals') ? 'bg-blue-700' : 'hover:bg-gray-700'
+                }`}
+              >
+                Content Approvals
+              </Link>
+            )}
+          </>
+        )}
+      </nav>
+    </aside>
+  );
+};
+
+export default Sidebar;

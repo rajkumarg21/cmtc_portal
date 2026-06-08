@@ -32,12 +32,12 @@ const ServicesHeader = () => {
   };
 
   const services = [
-    { label: t("servicesData.advertisement"), path: "/advertisementSectionList" },
-    { label: t("servicesData.film"), path: "/filmSectionList" },
-    { label: t("servicesData.project"), path: "/projectSectionList" },
-    { label: t("servicesData.print"), path: "/printingSectionList" },
-    { label: t("servicesData.events"), path: "/eventSectionList" },
-    { label: t("servicesData.rojgar-nirman"), path: "/rojgarAndNirman" },
+    { label: t("services.hsgProduct"), path: "/advertisementSectionList" },
+    { label: t("services.livelihoodActivity"), path: "/filmSectionList" },
+    { label: t("services.actAndRule"), path: "/projectSectionList" },
+    { label: t("services.successStory"), path: "/printingSectionList" },
+    { label: t("services.policies"), path: "/eventSectionList" },
+    { label: t("services.anualActionPlan"), path: "/ActionPlanList" },
   ];
 
   return (
@@ -62,7 +62,7 @@ const ServicesHeader = () => {
               fontSize: { xs: "1rem", sm: "1.1rem" },
             }}
           >
-            {t("servicesData.title")}
+            {t("services.title")}
           </Typography>
           <ChevronRightIcon sx={{ color: "#fff", ml: 0.5 }} />
         </Box>
@@ -80,7 +80,7 @@ const ServicesHeader = () => {
           >
             {services.map((service) => (
               <Button
-                key={service.path}
+                key={`${service.path}-${service.label}`}
                 component={Link}
                 to={service.path}
                 sx={buttonStyle}

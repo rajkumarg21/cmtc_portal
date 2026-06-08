@@ -15,7 +15,7 @@ import {
   Divider,
 } from "@mui/material";
 import { getPublishedNewsArticles } from "../../services/newsService";
-import PageHeader from "../../components/public/Comman/PageHeader";
+import PageHeader from "../../components/public/Common/PageHeader";
 
 // Default fallback articles
 const defaultNewsArticles = [

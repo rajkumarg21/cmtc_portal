@@ -1,0 +1,416 @@
+import React, { useEffect, useState } from 'react'
+import { getMISInternalBookingCount ,getMISInternalBookings} from "../../services/bookingService";
+import {
+  getAllDistricts,
+  getBlocksByDistrict,
+} from "../../services/cmtcCenterService";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import "./MisStyle.css";
+import { useTranslation } from "react-i18next";
+function MisInternalBooking() {
+    const { t} = useTranslation();
+     const [data, setData] = useState({
+          totalBookings: 0,
+          totalAmount: 0,
+          receivedAmount: 0,
+          totalRemainingAmount: 0,
+          completedTrainings: 0,
+        });
+        const [districts, setDistricts] = useState([]);
+        const [blocks, setBlocks] = useState([]);   
+        const [loading, setLoading] = useState(true);
+        const [allBookings, setAllBookings] = useState([]);
+        const [filteredBookings, setFilteredBookings] = useState([]);
+        const [selectedDistrict, setSelectedDistrict] = useState("");
+        const [selectedBlock, setSelectedBlock] = useState("");
+        const [fromDate, setFromDate] = useState("");
+        const [toDate, setToDate] = useState("");
+        const [status, setStatus] = useState("");
+    // ================= fetch MIS count data =================
+    useEffect(() => {
+        fetchMISData();
+    }, []);
+        
+    const fetchMISData = async () => {
+        try {
+            const res = await getMISInternalBookingCount();
+            setData(res);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+    // ================= fetch all internal booking data =================
+        useEffect(() => {
+        fetchBookings();
+        }, []);
+
+        const fetchBookings = async () => {
+        try {
+            const data = await getMISInternalBookings();
+            setAllBookings(data);
+            setFilteredBookings(data);
+        } catch (err) {
+            console.error("Booking Error:", err);
+        }
+        };
+
+ // =================Apply filter data =================
+    const applyFilters = () => {
+      let data = [...allBookings];
+
+      if (selectedDistrict) {
+        data = data.filter(
+          (b) => b.districtId === Number(selectedDistrict)
+        );
+      }
+
+      if (selectedBlock) {
+        data = data.filter(
+          (b) => b.blockId === Number(selectedBlock)
+        );
+      }
+
+       if (fromDate) {
+      data = data.filter(
+        (b) => new Date(b.fromDate) >= new Date(fromDate)
+      );
+    }
+
+    if (toDate) {
+      data = data.filter(
+        (b) => new Date(b.toDate) <= new Date(toDate)
+      );
+    }
+      if (status) {
+        data = data.filter(
+          (b) => b.status?.toUpperCase() === status
+        );
+      }
+      setFilteredBookings(data);
+    };
+// ================= fetch all district =================
+    useEffect(() => {
+      getAllDistricts()
+        .then((res) => setDistricts(res.data))
+        .catch(() => setDistricts([]));
+    }, []);
+
+// ================= fetch block selected by district =================
+    useEffect(() => {
+      if (selectedDistrict) {
+        getBlocksByDistrict(selectedDistrict)
+          .then((res) => setBlocks(res.data))
+          .catch(() => setBlocks([]));
+      } else {
+        setBlocks([]);
+      }
+    }, [selectedDistrict]);
+
+    // ================= Excel =================
+        const downloadExcel = () => {
+        const exportData = filteredBookings.map((item, index) => ({
+          S_No: index + 1,
+          CMTC_Name: item.centerName,
+          District: item.districtName,
+          Block: item.blockName,
+          Department: item.departmentName,
+          Officer: item.officerName,
+          From_Date: item.fromDate,
+          To_Date:item.toDate,
+          Status: item.status,
+        }));
+    
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+    
+        XLSX.utils.book_append_sheet(workbook, worksheet, "MIS Report");
+    
+        const excelBuffer = XLSX.write(workbook, {
+          bookType: "xlsx",
+          type: "array",
+        });
+    
+        const blob = new Blob([excelBuffer], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+    
+        saveAs(blob, "MIS_Report.xlsx");
+      };
+    // ================= PDF =================
+        const downloadPDF = () => {
+        const doc = new jsPDF("landscape");
+    
+        const columns = [
+          "S.No",
+          "CMTC Name",
+          "District",
+          "Block",
+          "Department",
+          "Officer",
+          "From Date",
+          "To Date",
+          "Status",
+        ];
+    
+        const rows = filteredBookings.map((item, index) => [
+          index + 1,
+          item.centerName,
+          item.districtName,
+          item.blockName,
+          item.departmentName,
+          item.officerName,
+          item.fromDate,
+          item.toDate,
+          item.status,
+        ]);
+    
+        doc.text("CMTC MIS Report", 14, 15);
+    
+        autoTable(doc, {
+          head: [columns],
+          body: rows,
+          startY: 20,
+          styles: { fontSize: 8 },
+        });
+    
+        doc.save("MIS_Report.pdf");
+      };
+  return (
+   <>
+      <div className="container my-4">
+
+      {/* Header */}
+      <h4 className="text-center fw-bold mb-4">
+       {t("sidebar.Internal_page_heading")}
+      </h4>
+
+      {/* Stats Cards */}
+      <div className="row g-3 mb-4">
+
+        {/* Total Amount */}
+        <div className="col-md-2 col-sm-6">
+          <div className="stat-card stat-purple">
+            <div>
+              <small className="text-white">{t("admin.totalInternalBookings")}</small>
+              <h2 className="fw-bold text-white">
+                {loading ? "..." : `₹${data.totalBookings}`}
+              </h2>
+            </div>
+           
+          </div>
+        </div>
+
+        {/* Advance Amount */}
+        <div className="col-md-2 col-sm-6">
+          <div className="stat-card stat-blue">
+            <div>
+              <small className="text-white">{t("admin.totalAmount")}</small>
+              <h2 className="fw-bold text-white">
+                {loading ? "..." : `₹${data.totalAmount}`}
+              </h2>
+            </div>
+           
+          </div>
+        </div>
+
+        {/* Remaining */}
+        <div className="col-md-2 col-sm-6">
+          <div className="stat-card stat-orange">
+            <div>
+              <small className="text-white">{t("admin.totalReceived")}</small>
+              <h2 className="fw-bold text-white">
+                {loading ? "..." : `₹${data.receivedAmount}`}
+              </h2>
+            </div>
+           
+          </div>
+        </div>
+
+        {/* Advance Paid */}
+        <div className="col-md-2 col-sm-6">
+          <div className="stat-card stat-green">
+            <div>
+              <small className="text-white">{t("admin.remainingAmount")}</small>
+              <h2 className="fw-bold text-white">
+                {loading ? "..." : `₹${data.totalRemainingAmount}`}
+              </h2>
+            </div>
+           
+          </div>
+        </div>
+
+        {/* Fully Paid */}
+        <div className="col-md-2 col-sm-6">
+          <div className="stat-card stat-red">
+            <div>
+              <small className="text-white">{t("admin.totalCompletedTrainings")}</small>
+              <h3 className="fw-bold text-white">
+                {loading ? "..." : `${data.completedTrainings}`}
+              </h3>
+            </div>
+           
+          </div>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="card p-3 mb-4 border-0 shadow-sm">
+        <div className="row g-3 align-items-end">
+
+          <div className="col-md-2">
+            <label className="form-label">{t("admin.statusFilter")}</label>
+           <select
+              className="form-select"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+             <option value="">All Status</option>
+              <option value="BOOKED">Booked</option>
+              <option value="PENDING_BLOCK_APPROVAL">Pending by block</option>
+              <option value="PENDING_DISTRICT_APPROVAL">Pending by district</option>
+              <option value="CANCELLED">Cancelled</option>
+              <option value="BLOCK_REJECTED">Rejected by block</option>
+              <option value="DISTRICT_REJECTED">Rejected by district</option>
+              <option value="TRAINING_COMPLETED">Training Completed</option>
+            </select> 
+          </div>
+
+          <div className="col-md-3">
+            <label className="form-label">{t("admin.district")}</label>
+           <select
+              className="form-select"
+              value={selectedDistrict}
+              onChange={(e) => setSelectedDistrict(e.target.value)}
+            >
+              <option value="">All Districts</option>
+              {districts.map((d) => (
+                <option key={d.districtId} value={d.districtId}>
+                  {d.districtNameEn}
+                </option>
+              ))}
+            </select>
+            </div>
+
+          <div className="col-md-3">
+            <label className="form-label">{t("admin.block")}</label>
+            <select
+              className="form-select"
+              value={selectedBlock}
+              onChange={(e) => setSelectedBlock(e.target.value)}
+              disabled={!selectedDistrict}
+            >
+              <option value="">All Blocks</option>
+              {blocks.map((b) => (
+                <option key={b.blockId} value={b.blockId}>
+                  {b.blockNameEn}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="col-md-2">
+            <label className="form-label">{t("admin.fromDate")}</label>
+            <input
+                type="date"
+                className="form-control"
+                value={fromDate}
+                onChange={(e) => setFromDate(e.target.value)}
+              />
+          </div>
+
+          <div className="col-md-2">
+            <label className="form-label">{t("admin.toDate")}</label>
+            <input
+                type="date"
+                className="form-control"
+                value={toDate}
+                onChange={(e) => setToDate(e.target.value)}
+              />
+          </div>
+
+          {/* Buttons */}
+          <div className="col-md-12 d-flex justify-content-center gap-2 mt-3">
+            <button className="btn btn-primary btn-sm"  onClick={applyFilters}>
+              {t("admin.generateReport")}
+            </button>
+            <button className="btn btn-success btn-sm" onClick={downloadExcel}>{t("admin.excel")}</button>
+            <button className="btn btn-danger btn-sm" onClick={downloadPDF}>{t("admin.pdf")}</button>
+          </div>
+
+        </div>
+      </div>
+      
+      {/* Table */}
+      <div className="card border-0 shadow">
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover mb-0">
+            <thead className="custom-header table-light">
+              <tr>
+                <th>{t("admin.sNo")}</th>
+                <th>{t("booking.cmtcName")}</th>
+                <th>{t("admin.district")}</th>
+                <th>{t("admin.block")}</th>
+                <th>{t("admin.applicant_name")}</th>
+                <th>{t("admin.fromDate")}</th>
+                <th>{t("admin.toDate")}</th>
+                <th>{t("admin.status")}</th>
+              </tr>
+            </thead>
+
+              <tbody className="custom-data">
+              {filteredBookings.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="text-center">
+                    No Data Found
+                  </td>
+                </tr>
+              ) : (
+                filteredBookings.map((row, index) => (
+                  <tr key={row.id || index}>
+                    <td>{index + 1}</td>
+                    <td>{row.centerName || "-"}</td>
+                    <td>{row.districtName || "-"}</td>
+                    <td>{row.blockName || "-"}</td>
+
+                    {/* Check correct field names */}
+                    <td>{row.officerName || row.applicantName || "-"}</td>
+
+                     <td>{row.fromDate || "-"}</td>
+                      <td>{row.toDate || "-"}</td>
+
+                    <td>
+                      <span
+                        className={`badge ${
+                          row.status === "BOOKED"
+                            ? "bg-success"
+                            : row.status?.includes("PENDING")
+                            ? "bg-warning text-dark"
+                            : row.status?.includes("REJECT")
+                            ? "bg-danger"
+                            : row.status?.includes("TRAINING_COMPLETED")
+                            ? "bg-info"
+                            : "bg-secondary"
+                        }`}
+                      >
+                        {row.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+           
+          </table>
+        </div>
+      </div>
+    </div>
+    </>
+  )
+}
+
+export default MisInternalBooking

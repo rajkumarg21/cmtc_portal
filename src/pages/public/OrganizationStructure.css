@@ -1,0 +1,73 @@
+body {
+  background: #f4f6f9;
+}
+
+.org-title {
+  background: #0F766E;
+  color: white;
+  padding: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 22px;
+ 
+}
+
+.org-card {
+  padding: 18px;
+  border-radius: 14px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.org-card:hover {
+  transform: translateY(-6px);
+}
+
+.ceo {
+  background: linear-gradient(45deg, #343a40, #6c757d);
+}
+
+.blue {
+  background: linear-gradient(45deg, #4e73df, #1cc88a);
+}
+
+.red {
+  background: linear-gradient(45deg, #e74a3b, #f6c23e);
+}
+
+.green {
+  background: linear-gradient(45deg, #1cc88a, #36b9cc);
+}
+
+.yellow {
+  background: linear-gradient(45deg, #f6c23e, #f8b739);
+  color: #000;
+}
+
+.connector {
+  width: 2px;
+  height: 40px;
+  background: #adb5bd;
+  margin: 0 auto;
+}
+
+.small-connector {
+  width: 2px;
+  height: 30px;
+  background: #adb5bd;
+  margin: 0 auto;
+}
+
+.horizontal-line {
+  height: 2px;
+  background: #adb5bd;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.horizontal-line.small {
+  width: 60%;
+}

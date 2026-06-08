@@ -1,0 +1,10 @@
+
+.card-header {
+    background-color: #0F766E !important;
+    color: white !important;
+}
+
+.status-badge {
+    font-size: 14px;
+    padding: 6px 12px;
+}

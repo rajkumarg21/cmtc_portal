@@ -25,7 +25,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { useAuth } from '../../context/AuthContext';
-//import { getPagesForNavbar } from '../../services/staticPageService';
+import { getPagesForNavbar } from '../../services/staticPageService';
 import { defaultHeaderLinks } from '../../DummyData';
 import { useTranslation } from 'react-i18next';
 
@@ -83,7 +83,7 @@ const DesktopNavItem = ({ item, handleMenuOpen, handleMenuClose, anchorEls, isHi
 
 // --- Main Component ---
 const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
-  const { isAuthenticated, hasRole, logout } = useAuth();
+  const { isAuthenticated, hasRole, logout , user} = useAuth();
   const { t, i18n } = useTranslation();
   const [navbarItems, setNavbarItems] = useState([]);
   const [loadingNavbar, setLoadingNavbar] = useState(true);
@@ -91,13 +91,13 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
   const [anchorEls, setAnchorEls] = useState({});
   const [langMenuAnchor, setLangMenuAnchor] = useState(null);
   const [profileAnchor, setProfileAnchor] = useState(null);
-  const [mobileOpen, setMobileOpen] = useState(false); // State for mobile drawer
+  const [mobileOpen, setMobileOpen] = useState(false);
   
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const APP_BAR_COLOR = "#0b2d46";
+  const APP_BAR_COLOR = "#1F3C88";
   const ACTIVE_LINK_COLOR = theme.palette.info.light || '#7e9bf4'; 
 
   const services = [
@@ -106,24 +106,32 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
     { label: t("services.project"), path: "/projectSectionList" },
     { label: t("services.print"), path: "/printingSectionList" },
     { label: t("services.events"), path: "/eventSectionList" },
-    // { label: t("services.rojgar-nirman"), path: "/rojgarAndNirman" },
   ];
 
+  // ✅ Define role checks
+  const hasCMSAccess = hasRole(['PORTAL_ADMIN', 'EDITOR', 'PUBLISHER']);
+  const hasFullAdminAccess = hasRole(['PORTAL_ADMIN']);
+  const hasLimitedAdminAccess = hasRole([
+    'ZONAL_HEAD',
+    'DISTRICT_OFFICER',
+    'BLOCK_OFFICER',
+    'CMTC_MANAGER'
+  ]);
 
-  useEffect(() => {
-    const fetchNavbarItems = async () => {
-      try {
-        const items = await getPagesForNavbar();
-        setNavbarItems(items);
-      } catch (error) {
-        setNavbarError(t('navbar.errorLoading'));
-        setNavbarItems([]);
-      } finally {
-        setLoadingNavbar(false);
-      }
-    };
-    fetchNavbarItems();
-  }, [t, i18n.language]);
+  // useEffect(() => {
+  //   const fetchNavbarItems = async () => {
+  //     try {
+  //       const items = await getPagesForNavbar();
+  //       setNavbarItems(items);
+  //     } catch (error) {
+  //       setNavbarError(t('navbar.errorLoading'));
+  //       setNavbarItems([]);
+  //     } finally {
+  //       setLoadingNavbar(false);
+  //     }
+  //   };
+  //   fetchNavbarItems();
+  // }, [t, i18n.language]);
 
   const isNavLinkActive = (path) => location.pathname === path;
 
@@ -144,16 +152,14 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
     setLangMenuAnchor(null);
   };
 
-  // Consolidated toggle function for the leftmost icon
   const handleMainToggle = () => {
-    if (isMobile) {
-      setMobileOpen(true); // Open the mobile drawer
-    } else {
-      toggleSidebar(); // Toggle the desktop sidebar
-    }
+    // if (isMobile) {
+    //   setMobileOpen(true);
+    // } else {
+      toggleSidebar();
+    // }
   };
 
-  // Toggle function for closing the mobile drawer
   const toggleMobileDrawer = (open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -161,85 +167,74 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
     setMobileOpen(open);
   };
 
-    // ✅ Mobile Drawer menu
-    const renderMobileMenu = () => (
-      <Drawer anchor="left" open={mobileOpen} onClose={toggleMobileDrawer(false)}>
-        <Box sx={{ width: 250, p: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-            <IconButton onClick={toggleMobileDrawer(false)}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <List>
-            {defaultHeaderLinks.map(({ path, labelKey }) => (
-              <ListItem key={path} disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to={path}
-                  onClick={(e) => {
-                    checkUserLogin(e, path, labelKey);
-                    setMobileOpen(false);
-                  }}
-                >
-                  <ListItemText primary={t(labelKey)} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-            {services.map(({ path, label }) => (
-              <ListItem key={path} disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to={path}
-                  onClick={(e) => {
-                    checkUserLogin(e, path, label);
-                    setMobileOpen(false);
-                  }}
-                >
-                  <ListItemText primary={label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+  const renderMobileMenu = () => (
+    <Drawer anchor="left" open={mobileOpen} onClose={toggleMobileDrawer(false)}>
+      <Box sx={{ width: 250, p: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <IconButton onClick={toggleMobileDrawer(false)}>
+            <CloseIcon />
+          </IconButton>
         </Box>
-      </Drawer>
-    );
-
+        <List>
+          {defaultHeaderLinks.map(({ path, labelKey }) => (
+            <ListItem key={path} disablePadding>
+              <ListItemButton
+                component={Link}
+                to={path}
+                onClick={() => setMobileOpen(false)}
+              >
+                <ListItemText primary={t(labelKey)} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+          {services.map(({ path, label }) => (
+            <ListItem key={path} disablePadding>
+              <ListItemButton
+                component={Link}
+                to={path}
+                onClick={() => setMobileOpen(false)}
+              >
+                <ListItemText primary={label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Drawer>
+  );
 
   return (
     <AppBar 
       position="fixed" 
       sx={{ 
         backgroundColor: APP_BAR_COLOR, 
-        height: '64px', 
+        height: '65px', 
         zIndex: theme.zIndex.drawer + 1,
-        left: { xs: 0, md: isSidebarOpen ? 240 : 67 },
+        left: { xs: 0, md: isSidebarOpen ? 0 : 0 },
         width: { 
-            md: isSidebarOpen ? `calc(100% - 240px)` : `calc(100% - 67px)`,
+            md: isSidebarOpen ? `calc(100% - 0px)` : `calc(100% - 0px)`,
             xs: '100%',
         }
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', minHeight: '64px' }}>
-        
-        {/* Left Side: Main Toggle Icon & Branding */}
+ 
+       
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          
-          {/* Main Toggle Icon: Function changes based on screen size */}
           <IconButton 
             edge="start" 
             color="inherit" 
-            onClick={handleMainToggle} // Consolidated logic
+            onClick={handleMainToggle}
             aria-label={isMobile ? "open mobile menu" : "toggle sidebar"}
             sx={{ color: 'white' }}
           >
             <MenuIcon />
           </IconButton>
+           <Typography variant="h5">
+              {t("admin.cmtcheaderTitle")}
+            </Typography>
         </Box>
-
-        {/* Center - Desktop only Navigation (Hidden on Mobile) */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2 }}>
-          
-          {/* Default Static Links */}
           {defaultHeaderLinks.map(({ path, labelKey }) => (
             <Button
               key={path}
@@ -254,9 +249,9 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
             </Button>
           ))}
 
-          {/* Dynamic API Links */}
           {loadingNavbar ? (
-            <Typography sx={{ color: theme.palette.info.light || 'lightblue' }}>{t('navbar.loading')}</Typography>
+            // <Typography sx={{ color: theme.palette.info.light || 'lightblue' }}>{t('navbar.loading')}</Typography>
+             <Typography sx={{ color: theme.palette.info.light || 'lightblue' }}>{('')}</Typography>
           ) : navbarError ? (
             <Typography sx={{ color: theme.palette.error.main || 'red' }}>{navbarError}</Typography> 
           ) : (
@@ -273,10 +268,15 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
           )}
         </Box>
         
-        {/* Right Side: Utilities (Language and Profile) */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          
-          {/* Language switcher */}
+          <Typography 
+          sx={{
+            fontWeight: 600,
+            color: '#ECE7FA' 
+          }}
+          >
+          Language
+          </Typography>
           <IconButton sx={{ color: 'white' }} onClick={handleLanguageMenuOpen} aria-label="Language selection">
             <LanguageIcon />
           </IconButton>
@@ -289,9 +289,16 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
             <MenuItem onClick={() => handleLanguageChange('hi')}>हिन्दी</MenuItem>
           </Menu>
 
-          {/* Profile / Login / Signup */}
           {isAuthenticated ? (
             <>
+             <Typography 
+              sx={{
+                  fontWeight: 600,
+                  color: '#ece8f7' 
+                }}
+             >
+              {user?.username || user?.fullName || 'User'}
+              </Typography>
               <IconButton onClick={(e) => setProfileAnchor(e.currentTarget)} sx={{ p: 0 }} aria-label="User Profile Menu">
                 <Avatar alt="User Avatar" />
               </IconButton>
@@ -300,11 +307,41 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
                 open={Boolean(profileAnchor)}
                 onClose={() => setProfileAnchor(null)}
               >
-                <MenuItem component={Link} to="/profile/edit" onClick={() => setProfileAnchor(null)}>{t('Edit Profile')}</MenuItem>
-                {hasRole(['NORMAL_VISITOR']) && (<MenuItem component={Link} to="/MySubscriptionPlans" onClick={() => setProfileAnchor(null)}> {t('My Plans')} </MenuItem>)}
-                {hasRole(['PORTAL_ADMIN', 'EDITOR', 'PUBLISHER']) && (<MenuItem component={Link} to="/cms/dashboard" onClick={() => setProfileAnchor(null)}>{t('CMS Dashboard')}</MenuItem>)}
-                {hasRole(['PORTAL_ADMIN']) && (<MenuItem component={Link} to="/admin/dashboard" onClick={() => setProfileAnchor(null)}>{t('Admin Dashboard')}</MenuItem>)}
-                <MenuItem onClick={() => { logout(); setProfileAnchor(null); }} sx={{ color: theme.palette.error.main }}>
+                <MenuItem component={Link} to="/profile/edit" onClick={() => setProfileAnchor(null)}>
+                  {t('Edit Profile')}
+                </MenuItem>
+                
+                {hasRole(['NORMAL_VISITOR']) && (
+                  <MenuItem component={Link} to="/MySubscriptionPlans" onClick={() => setProfileAnchor(null)}>
+                    {t('My Plans')}
+                  </MenuItem>
+                )}
+                
+                {hasCMSAccess && (
+                  <MenuItem component={Link} to="/cms/dashboard" onClick={() => setProfileAnchor(null)}>
+                    {t('CMS Dashboard')}
+                  </MenuItem>
+                )}
+                
+                {hasFullAdminAccess && (
+                  <MenuItem component={Link} to="/admin/admin_dashboard" onClick={() => setProfileAnchor(null)}>
+                    {t('Admin Dashboard')}
+                  </MenuItem>
+                )}
+
+                {hasLimitedAdminAccess && (
+                  <MenuItem component={Link} to="/admin/users" onClick={() => setProfileAnchor(null)}>
+                    {t('User Management')}
+                  </MenuItem>
+                )}
+                
+                <MenuItem 
+                  onClick={() => { 
+                    logout(); 
+                    setProfileAnchor(null); 
+                  }} 
+                  sx={{ color: theme.palette.error.main }}
+                >
                   {t('Logout')}
                 </MenuItem>
               </Menu>
@@ -313,22 +350,24 @@ const AdminHeader = ({ toggleSidebar, isSidebarOpen }) => {
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button component={Link} sx={{ color: 'white' }} to="/login">
                 <PersonOutlineIcon />
-                <Typography component="span" sx={{ fontSize: '0.9rem', ml: 0.5, fontWeight: 600 }}>{t('Login')}</Typography>
+                <Typography component="span" sx={{ fontSize: '0.9rem', ml: 0.5, fontWeight: 600 }}>
+                  {t('Login')}
+                </Typography>
               </Button>
-              {/* Hide Signup on mobile for cleaner header */}
               <Button 
                 component={Link} 
                 sx={{ color: 'white', fontWeight: 600, display: { xs: 'none', sm: 'flex' } }} 
                 to="/Signup"
               >
-                <Typography component="span" sx={{ fontSize: '0.9rem', ml: 0.5, fontWeight: 600 }}>{t('Signup')}</Typography>
+                <Typography component="span" sx={{ fontSize: '0.9rem', ml: 0.5, fontWeight: 600 }}>
+                  {t('Signup')}
+                </Typography>
               </Button>
             </Box>
           )}
         </Box>
       </Toolbar>
       
-      {/* Mobile Drawer (Only visible/used when isMobile is true) */}
       <Drawer
         anchor="left"
         open={mobileOpen}
