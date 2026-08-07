@@ -5,9 +5,9 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const ViewTypeSelector = ({ value, onChange }) => {
+const ViewTypeSelector = ({ value, onChange, disabled }) => {
   return (
-    <FormControl size="small" fullWidth>
+    <FormControl size="small" fullWidth disabled={disabled}>
       <InputLabel id="view-type-label">
         View Type
       </InputLabel>

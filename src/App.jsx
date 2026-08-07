@@ -167,6 +167,12 @@ import LsbUserManagement from './lsb/user-management/pages/LsbUserManagement.jsx
 import RequestLoanSubsidy from './lsb/loan-management/pages/RequestLoanSubsidy.jsx';
 import LoanRequests from './lsb/loan-management/pages/LoanRequests.jsx';
 import { LoanRequestDetails } from './lsb/loan-management/pages/LoanRequestDetails.jsx';
+import InventoryForm from './inventory/inventoryform.jsx';
+import InventoryReport from './inventory/InventoryReport.jsx';
+import DashboardSummary from './grading-audit/adminDashboard/DashboardSummary.jsx';
+import AssetInventoryCenterList from './inventory/AssetInventoryCenterList.jsx';
+import CmtcDetailsReport from './pages/admin/CmtcDetailsReport.jsx';
+import FinancialManagementForm from './pages/admin/FinancialManagementForm.jsx';
 
 function AppContent() {
   const { isAuthenticated, userRole, loading: authLoading } = useAuth();
@@ -377,6 +383,13 @@ function AppContent() {
             {/* <Route path="subscriptions/add" element={<AddSubscriptionPage />} /> */}
             {/* <Route path="services" element={<ManageServicesPage />} /> */}
             <Route path="contact-messages" element={<ContactMessagesPage />} />
+            <Route path="inventory-report/:centerId" element={<InventoryReport />} />
+            <Route path="inventory-report" element={<AssetInventoryCenterList/>}/>
+            <Route path="cmtc-details" element={<CmtcDetailsReport/>}/>
+            <Route
+              path="dashboard-summary"
+              element={<DashboardSummary />}
+            />
             
             <Route path="feedback" element={<FeedbackManagementPage />} />
             <Route path="rti-documents" element={<RtiDocumentManagementPage />} />
@@ -425,6 +438,9 @@ function AppContent() {
             <Route path="cmtc-events" element={<CmtcEventsManagementPage />} />
             <Route path="cmtc-events/:id" element={<CmtcEventsManagementPage />} />
             <Route path="center-list" element={<InternalCmtcCenterList />} />
+            <Route path="inventory" element={<InventoryForm />} />
+             <Route path="financialmanagement-form" element={<FinancialManagementForm />} /> 
+            
 
           </Route>
 

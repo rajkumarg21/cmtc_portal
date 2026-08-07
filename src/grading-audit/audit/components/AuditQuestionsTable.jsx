@@ -24,11 +24,11 @@ const AuditQuestionsTable = ({ questions, onChange, readOnly }) => {
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell>{t("s_no") || "#"}</TableCell>
-          <TableCell>{t("question") || "Question"}</TableCell>
-          <TableCell>{t("issueObserved") || "Issue"}</TableCell>
-          <TableCell>{t("correctionDone") || "Marks"}</TableCell>
-          <TableCell>{t("qualityRemark") || "Remark"}</TableCell>
+          <TableCell>{t("auditform.serialNo") || "#"}</TableCell>
+          <TableCell>{t("auditform.auditCriteria") || "Question"}</TableCell>
+          <TableCell>{t("auditform.issueObserved") || "Issue"}</TableCell>
+          <TableCell>{t("auditform.correctionDone") || "Marks"}</TableCell>
+          <TableCell>{t("auditform.qualityRemark") || "Remark"}</TableCell>
         </TableRow>
       </TableHead>
 

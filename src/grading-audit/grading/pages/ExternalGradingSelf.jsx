@@ -74,7 +74,7 @@ const ExternalGradingSelf = ({ cycleId, selectedCycle }) => {
               centers={data.centers || []}
               onOpenForm={openDialog}
               getPermissions={getGradingPermissions}
-              readOnly
+              readOnly={true}
             />
           </Box>
         </>

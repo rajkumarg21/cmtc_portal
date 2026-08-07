@@ -52,6 +52,21 @@ export const useAssessmentForm = (data) => {
 const validate = () => {
   const errors = [];
 
+  if (form.assessmentType?.includes("AUDIT")) {
+
+    form.questions.forEach(q => {
+      if (!q.issueObserved?.trim()) {
+        errors.push({
+          questionId: q.questionId,
+          message: "Issue observed required"
+        });
+      }
+    });
+
+     return errors;
+
+  }
+
   form.questions.forEach(q => {
     // if (q.maxMarks == null) return;
 

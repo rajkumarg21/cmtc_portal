@@ -24,11 +24,11 @@ const GradingQuestionsTable = ({ questions, onChange, readOnly }) => {
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell>{t("s_no") || "#"}</TableCell>
-          <TableCell>{t("question") || "Question"}</TableCell>
-          <TableCell>{t("max_marks") || "Max Marks"}</TableCell>
-          <TableCell>{t("marks") || "Marks"}</TableCell>
-          <TableCell>{t("remark") || "Remark"}</TableCell>
+          <TableCell>{t("gradingform.serialNo") || "#"}</TableCell>
+          <TableCell>{t("gradingform.questions") || "Question"}</TableCell>
+          <TableCell>{t("gradingform.point") || "Max Marks"}</TableCell>
+          <TableCell>{t("gradingform.marks") || "Marks"}</TableCell>
+          <TableCell>{t("gradingform.remark") || "Remark"}</TableCell>
         </TableRow>
       </TableHead>
 

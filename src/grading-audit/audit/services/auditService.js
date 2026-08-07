@@ -23,13 +23,13 @@ export const getAssignedTeam = async ({ cycleId, districtId, viewType }) => {
  * 🔹 Assign Audit Lead 
  * POST /api/audit/team/assign/lead
  */
-export const assignAuditLead = async ({ cycleId, districtId, userId }) => {
+export const assignAuditLead = async ({ cycleId, districtId, userId ,assessmentType}) => {//add 
   try {
     const response = await api.post(
       `${API_BASE}/assign/lead`,
       null,
       {
-        params: { cycleId, districtId, userId },
+        params: { cycleId, districtId, userId,assessmentType }, // add assessmentType
       }
     );
 

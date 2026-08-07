@@ -5,11 +5,14 @@ import ProgressCard from "../../shared/components/ProgressCard";
 import CenterTable from "../../shared/components/CenterTable";
 import { getAssessmentCenters } from "../../shared/services/assessmentService";
 import ExternalGradingTeam from "./../components/ExternalGradingTeam";
+import { useAuth } from "../../../context/AuthContext";
+import { USER_ROLES } from "../../../utils/constants";
 
 const ExternalGrading = ({ cycleId, selectedCycle}) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const { userRole } = useAuth();
 
   const fetchExternalData = async () => {
     if (!cycleId ) return;

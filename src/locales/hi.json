@@ -153,7 +153,10 @@
     "MIS_Bookings":"एमआईएस सभी बुकिंग",
     "Revenue_Page_heading":"सीएमटीसी राजस्व प्रबंधन सूचना प्रणाली (एमआईएस)",
     "Internal_page_heading":"सीएमटीसी आंतरिक बुकिंग प्रबंधन सूचना प्रणाली (एमआईएस)",
-    "allbooking_page_heading":"सीएमटीसी बुकिंग प्रबंधन सूचना प्रणाली (एमआईएस)"
+    "allbooking_page_heading":"सीएमटीसी बुकिंग प्रबंधन सूचना प्रणाली (एमआईएस)",
+    "asset_inventory":"परिसंपत्ति इन्वेंटरी",
+    "inventory_report": "इन्वेंट्री रिपोर्ट",
+    "financial_management": "वित्तीय प्रबंधन रिपोर्ट"
   },
   "siteTitle": "म.प्र. राज्य ग्रामीण आजीविका मिशन",
   "quill": {
@@ -983,5 +986,54 @@
       "emailRequired": "ईमेल आवश्यक है",
       "roleRequired": "भूमिका आवश्यक है",
       "cmtcCenterRequired": "सीएमटीसी केंद्र आवश्यक है"
-    }
+    },
+    "gradingform": {
+      "serialNo": "क्र.सं.",
+      "questions": "अंकेक्षण के विषय",
+      "point": "निर्धारित अंक",
+      "marks": "प्राप्त अंक",
+      "remark": "टिप्पणी"
+    },
+    "auditform": {
+      "serialNo": "क्र.सं.",
+      "auditCriteria": "अंकेक्षण के विषय",
+      "issueObserved": "पाई गई कमियाँ",
+      "correctionDone": "की गई सुधारात्मक कार्यवाही",
+      "qualityRemark": "गुणवत्ता संबंधी टिप्पणी"
+    },
+    "financial": {
+    "title": "वित्तीय जानकारी",
+    "cmtcCenter": "सीएमटीसी केंद्र",
+    "foodPreparationAmount": "भोजन तैयारी हेतु भुगतान राशि",
+    "materialPurchaseAmount": "सामग्री क्रय हेतु भुगतान राशि",
+    "servicesAmount": "सेवाओं हेतु भुगतान राशि",
+    "communityTrainerPayment": "सामुदायिक प्रशिक्षकों को भुगतान राशि",
+    "totalNetSavingsAmount": "कुल शुद्ध बचत राशि",
+    "availableAmountInClfBankAccount": "सीएलएफ बैंक खाते में उपलब्ध राशि",
+    "availableAmountInCmtcSubAccount": "सीएमटीसी उप खाते में उपलब्ध राशि",
+    "fdAmountAndDate": "एफडी राशि एवं दिनांक",
+    "totalAmountReceivedForCmtcEstablishment": "सीएमटीसी स्थापना हेतु प्राप्त कुल राशि",
+    "totalExpenseAmountTill31March2026": "31 मार्च 2026 तक कुल व्यय राशि",
+    "totalRemainingAmountTill31March2026": "31 मार्च 2026 तक शेष राशि",
+    "amountGivenToCmtcManager": "सीएमटीसी प्रबंधक को दी गई राशि",
+    "amountGivenToCmtcAccountant": "सीएमटीसी लेखाकार को दी गई राशि",
+    "accountantPaymentType": "लेखाकार के भुगतान का प्रकार",
+    "accountantPaymentAmount": "लेखाकार को भुगतान राशि",
+    "managerPaymentType": "प्रबंधक के भुगतान का प्रकार",
+    "managerPaymentAmount": "प्रबंधक को भुगतान राशि",
+    "guardPaymentType": "गार्ड / चौकीदार के भुगतान का प्रकार",
+    "guardPaymentAmount": "गार्ड / चौकीदार को भुगतान राशि",
+    "totalExpenseAmountByCmtc": "सीएमटीसी द्वारा कुल व्यय राशि",
+    "totalWorkingDays": "कुल कार्य दिवस",
+    "totalNumberOfPrograms": "कुल कार्यक्रमों की संख्या",
+    "totalNumberOfBeneficiaries": "कुल लाभार्थियों की संख्या",
+    "totalWorkingDaysIn202526": "कुल कार्य दिवस (2025-26)",
+    "totalNumberOfProgramsIn202526": "कुल कार्यक्रमों की संख्या (2025-26)",
+    "totalNumberOfBeneficiariesIn202526": "कुल लाभार्थियों की संख्या (2025-26)",
+    "save": "सहेजें",
+    "selectCenter": "सीएमटीसी केंद्र का चयन करें",
+    "monthly": "मासिक",
+    "yearly": "वार्षिक",
+    "other": "अन्य"
+  }
 }

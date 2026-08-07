@@ -9,7 +9,7 @@ import { USER_ROLES } from "./../../../utils/constants";
 import { ViewType } from "../../shared/constants/assessmentConstants";
 import { useAuth } from "../../../context/AuthContext";
 
-const useAudit = (cycleId, districtId, viewType) => {
+const useAudit = (cycleId, districtId, viewType,assessmentType) => {  // add AssessmentType
   const { user } = useAuth(); // ✅ add
 
   const [data, setData] = useState(null);
@@ -98,15 +98,24 @@ const useAudit = (cycleId, districtId, viewType) => {
       if (!data?.districtId) {
         throw new Error("District ID missing");
       }
+      const targetDistrictId =
+            ViewType.SELF === viewType
+            ? data.districtId
+            : user.districtId;
+      console.log("Generate District =", user.districtId);
+      console.log("Assign District =", data.districtId);
 
       await assignAuditLead({
         cycleId,
-        districtId: data.districtId,
+        // districtId: data.districtId,
+        districtId: targetDistrictId, // add to fix generate team id and lead assign team id is differ
         userId,
+        assessmentType, // add to pass
       });
 
       // ✅ Refetch team (source of truth = backend)
-      await fetchAssignedTeam(cycleId, data.districtId);
+      // await fetchAssignedTeam(cycleId, data.districtId);
+      await fetchAssignedTeam(cycleId, targetDistrictId);  // add to fix 
 
     } catch (err) {
       console.error("Assign lead failed:", err);

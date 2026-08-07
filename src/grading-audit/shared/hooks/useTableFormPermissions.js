@@ -9,8 +9,8 @@ const useTableFormPermissions = () => {
 
     const isAssessmentClosed =
       status === "CLOSED";
-
-    const editableStatuses = ["OPEN"]; // future: ["OPEN", "REOPENED"]
+    const editableStatuses = ["OPEN","DRAFT"]; // future: ["OPEN", "REOPENED"]
+    // const editableStatuses = ["OPEN"]; // future: ["OPEN", "REOPENED"]
     const isEditableStatus = editableStatuses.includes(status);
 
      const readOnly =

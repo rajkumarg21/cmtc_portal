@@ -15,7 +15,7 @@ import AuditTeamSection from "../components/AuditTeamSection";
 import AuditFormDialog from "../components/AuditFormDialog";
 
 import { useAuth } from "../../../context/AuthContext";
-import { ViewType } from "../../shared/constants/assessmentConstants";
+import { AssessmentType, ViewType } from "../../shared/constants/assessmentConstants";
 import useTableFormPermissions from "../../shared/hooks/useTableFormPermissions";
 
 const ExternalAuditAssigned = ({ cycleId, selectedCycle }) => {
@@ -29,7 +29,7 @@ const ExternalAuditAssigned = ({ cycleId, selectedCycle }) => {
     error,
     refetch,
     handleGenerateTeam
-  } = useAudit(cycleId, ViewType.ASSIGNED);
+  } = useAudit(cycleId,null, ViewType.ASSIGNED,AssessmentType.EXTERNAL_AUDIT); //add
 
   const {getAuditPermissions} = useTableFormPermissions();
 
@@ -87,7 +87,8 @@ const ExternalAuditAssigned = ({ cycleId, selectedCycle }) => {
           <Box mt={3}>
             <CenterTable
               centers={data.centers || []}
-              onOpenForm={open}
+              // onOpenForm={open}
+              onOpenForm={openDialog}  // add bcz open is boolean not function to open dialog
               getPermissions={(center) =>
                   getAuditPermissions(center, {
                     isLead,

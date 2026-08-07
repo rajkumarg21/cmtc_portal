@@ -52,7 +52,8 @@ const AuditFormDialog = ({
     if (errors.length > 0) {
       console.log("❌ Validation errors:", errors);
       alert(
-        `Invalid marks in ${errors.length} question(s).\nCheck console.`
+        // `Invalid marks in ${errors.length} question(s).\nCheck console.`
+         `Please fill all required fields for remaining ${errors.length} questions before submitting.`
       );
       return;
     }
@@ -63,7 +64,13 @@ const AuditFormDialog = ({
   };
 
   const handleDraft = async () => {
-    await save(buildPayload("DRAFT"));
+    try{
+         await save(buildPayload("DRAFT"));
+          swal("Success", "Draft saved successfully", "success");
+    } catch (error) {
+      swal("Error", "Failed to save draft", "error");
+  }
+   
   };
 
   return (

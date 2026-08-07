@@ -54,8 +54,8 @@ const CenterTable = ({ centers = [], onOpenForm, readOnly: parentReadOnly = fals
 
         <TableBody>
           {centers.map((center) => {
-            const { readOnly, isSubmitted } = getPermissions(center);
-            const isReadOnly = readOnly
+            const { readOnly, isSubmitted } = getPermissions(center,parentReadOnly);
+            const isReadOnly = parentReadOnly || readOnly;
             return (
               <TableRow key={center.centerId}>
                 <TableCell>{center.centerName}</TableCell>

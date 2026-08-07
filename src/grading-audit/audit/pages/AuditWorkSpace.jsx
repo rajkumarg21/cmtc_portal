@@ -14,8 +14,12 @@ import InternalAudit from "./InternalAudit";
 import ExternalAudit from "./ExternalAudit";
 import ExternalAuditSelf from "./ExternalAuditSelf";
 import ExternalAuditAssigned from "./ExternalAuditAssigned";
+import { useAuth } from "../../../context/AuthContext";
 
 const AuditWorkspace = () => {
+
+  const {userRole} = useAuth();
+
   const {
     cycleType,
     setCycleType,
@@ -24,8 +28,10 @@ const AuditWorkspace = () => {
     isExternal,
     viewType,
     setViewType,
+    canModifyViewType,
+    isViewTypeDisabled,    
 
-  } = useAssessment(CycleCategory.AUDIT);
+  } = useAssessment(CycleCategory.AUDIT, userRole);
 
   const {
     cycles,
@@ -59,14 +65,14 @@ const AuditWorkspace = () => {
               }}
             />
           </Grid>
-          {isExternal && (
-                <Grid item size={{ xs: 12, md: 6 }}>
-                  <ViewTypeSelector
-                    value={viewType}
-                    onChange={setViewType}
-                  />
-                </Grid>
-            )}
+          {isExternal && canModifyViewType && (
+            <Grid item size={{ xs: 12, md: 6 }}>
+              <ViewTypeSelector
+                value={viewType}
+                onChange={setViewType}
+              />
+            </Grid>
+          )}
           
 
           <Grid item size={{xs:12, md:6}}>

@@ -93,6 +93,11 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
    
     { label: t("sidebar.users"), icon: <GroupIcon />, path: "/admin/users" },
     { label: t("sidebar.contact_messages"), icon: <MailIcon />, path: "/admin/contact-messages" },
+    { label: t("sidebar.inventory_report"), icon: <MailIcon />, path: "/admin/inventory-report" },
+    { label: t("sidebar.financial_management"), icon: <MailIcon />, path: "/admin/cmtc-details" },
+    
+
+    { label: t("GRADING /AUDIT"), icon: <MailIcon />, path: "/admin/dashboard-summary" }
 
   ];
 
@@ -108,8 +113,9 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
         { label: t("sidebar.my_booking"), icon: <MailIcon />, path: "/officer/my-bookings" },
         { label: t("sidebar.grading"), icon: <GroupIcon />, path: "/officer/grading-page" },
         { label: t("sidebar.audit"), icon: <GroupIcon />, path: "/officer/audit-page" },
-        { label: t("sidebar.internal_booking"), icon: <MailIcon />, path: "admin/center-list" }
-
+        { label: t("sidebar.internal_booking"), icon: <MailIcon />, path: "admin/center-list" },
+        { label: t("sidebar.asset_inventory"), icon: <MailIcon />, path: "admin/inventory" }, // add inventory from
+        { label: t("sidebar.financial_form"), icon: <MailIcon />, path: "admin/financialmanagement-form" }
         ]
       : []),
   ];
@@ -123,8 +129,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
         { label: t("sidebar.grading"), icon: <GroupIcon />, path: "/officer/grading-page" },
         { label: t("sidebar.audit"), icon: <GroupIcon />, path: "/officer/audit-page" },
         { label: t("sidebar.cmtc_events"), icon: <EventAvailableIcon />, path: "/admin/cmtc-events" },
-        { label: t("sidebar.financial_form"), icon: <MailIcon />, path: "/officer/financial-form" },
+        // { label: t("sidebar.financial_form"), icon: <MailIcon />, path: "/officer/financial-form" },
         { label: t("sidebar.internal_booking"), icon: <MailIcon />, path: "admin/center-list" },
+        { label: t("sidebar.asset_inventory"), icon: <MailIcon />, path: "admin/inventory" },// add inventory from
+        { label: t("sidebar.financial_form"), icon: <MailIcon />, path: "admin/financialmanagement-form" },
           // { label: t("sidebar.departments"), icon: <ApartmentIcon />, path: "/cms/departments" },
         { label: t("sidebar.cmtc_centers"), icon: <BusinessIcon />, path: "/cms/cmtc-centers" },
           // { label: t("sidebar.cmtc_officer"), icon: <PersonIcon />, path: "/cms/cmtc-officer" },

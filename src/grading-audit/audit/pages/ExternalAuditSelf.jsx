@@ -84,7 +84,7 @@ const ExternalAuditSelf = ({ cycleId, selectedCycle }) => {
             <CenterTable
               centers={data.centers || []}
               onOpenForm={openDialog}
-              readOnly // 🔥 view-only
+              readOnly={true} // 🔥 view-only
               getPermissions={getAuditPermissions}
 
             />

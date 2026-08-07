@@ -16,6 +16,7 @@ import AuditTeamSection from "../components/AuditTeamSection";
 import AuditFormDialog from "../components/AuditFormDialog";
 import { useAuth } from "../../../context/AuthContext";
 import useTableFormPermissions from "../../shared/hooks/useTableFormPermissions";
+import { AssessmentType } from "../../shared/constants/assessmentConstants";
 
 const InternalAudit = ({ cycleId, selectedCycle }) => {
   const {
@@ -27,7 +28,8 @@ const InternalAudit = ({ cycleId, selectedCycle }) => {
     error,
     refetch,
     handleGenerateTeam
-  } = useAudit(cycleId);
+  } = useAudit(cycleId,null, null,AssessmentType.INTERNAL_AUDIT); // add
+  // } = useAudit(cycleId);
 
   const { user, userRole } = useAuth();
   const { getAuditPermissions } = useTableFormPermissions();
@@ -54,7 +56,9 @@ const InternalAudit = ({ cycleId, selectedCycle }) => {
 
     openDialog(center, {
       ...options,
-      readOnly: !isLead, // ✅ non-lead → readOnly
+      // readOnly: !isLead, // ✅ non-lead → readOnly
+      readOnly: options.readOnly ? true : !isLead,   // when submitted  by lead it should readonly 
+
     });
   };
 

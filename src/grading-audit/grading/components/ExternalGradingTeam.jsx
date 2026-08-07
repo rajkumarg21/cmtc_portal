@@ -17,6 +17,8 @@ import {
     saveExternalTeam,
     getAssignedTeam,
 } from "../services/externalGradingService";
+import { useAuth } from "../../../context/AuthContext";
+import { USER_ROLES } from "../../../utils/constants";
 
 const otherRoles = [
     "BLOCK_OFFICER",
@@ -26,12 +28,16 @@ const otherRoles = [
 ];
 
 const ExternalGradingTeam = ({ cycleId, team = [], readOnly = false }) => {
+    const { userRole } = useAuth();
     const [eligibleUsers, setEligibleUsers] = useState({});
     const [teamMembers, setTeamMembers] = useState({});
     const [loading, setLoading] = useState(true);
     const [teamLoading, setTeamLoading] = useState(false);
     const [error, setError] = useState("");
     const [teamExists, setTeamExists] = useState(false);
+
+    const isReadOnly =
+        readOnly || userRole !== "DISTRICT_OFFICER";
 
     // ✅ helper
     const mapTeam = (teamList) => {
@@ -87,7 +93,7 @@ const ExternalGradingTeam = ({ cycleId, team = [], readOnly = false }) => {
 
     useEffect(() => {
         // 🔒 READ ONLY MODE → NO API CALL
-        if (readOnly) {
+        if (isReadOnly) {
             if (team?.length) {
                 setTeamMembers(mapTeam(team));
                 setTeamExists(true);
@@ -148,7 +154,7 @@ const ExternalGradingTeam = ({ cycleId, team = [], readOnly = false }) => {
         );
     }
 
-    if (readOnly && !teamExists) {
+    if (isReadOnly && !teamExists) {
         return (
             <Typography display="flex" justifyContent="left">
                 <Alert severity="info">
@@ -171,7 +177,7 @@ const ExternalGradingTeam = ({ cycleId, team = [], readOnly = false }) => {
                 </Alert>
             )}
 
-            {(readOnly || teamExists) ? (
+            {(isReadOnly || teamExists) ? (
                 <TeamPreview teamMembers={teamMembers} />
             ) : (
                 <TeamForm

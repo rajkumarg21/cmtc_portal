@@ -156,7 +156,10 @@
     "MIS_Bookings":"MIS All Bookings",
     "Revenue_Page_heading":"CMTC REVENUE MANAGEMENT INFORMATION SYSTEM (MIS)",
     "Internal_page_heading":"CMTC INTERNAL BOOKING MANAGEMENT INFORMATION SYSTEM (MIS)",
-    "allbooking_page_heading":"CMTC BOOKING MANAGEMENT INFORMATION SYSTEM (MIS)"
+    "allbooking_page_heading":"CMTC BOOKING MANAGEMENT INFORMATION SYSTEM (MIS)",
+    "asset_inventory":"Asset Inventory",
+    "inventory_report": "INVENTORY REPORT",
+    "financial_management":"FINANCIAL MANAGEMENT REPORT"
   },
   "siteTitle": "MP SRLM",
   "quill": {
@@ -996,5 +999,54 @@
     "emailRequired":"Email is required",
     "roleRequired":"Role is required",
     "cmtcCenterRequired":"CMTC Center is required"
+  },
+  "gradingform": {
+    "serialNo": "S. No.",
+    "questions": "Scope of Grading",
+    "point": "Maximum Marks",
+    "marks": "Obtained Marks",
+    "remark": "Remarks"
+  },
+  "auditform": {
+      "serialNo": "S. No.",
+      "auditCriteria": "Scope of Audit",
+      "issueObserved": "Observations / Issues Identified",
+      "correctionDone": "Corrective Actions Taken",
+      "qualityRemark": "Quality Remarks"
+    },
+    "financial": {
+    "title": "Financial Information",
+    "cmtcCenter": "CMTC Center",
+    "foodPreparationAmount": "Payment Amount for Food Preparation",
+    "materialPurchaseAmount": "Payment Amount for Material Purchase",
+    "servicesAmount": "Payment Amount for Services",
+    "communityTrainerPayment": "Payment Amount to Community Trainers",
+    "totalNetSavingsAmount": "Total Net Savings Amount",
+    "availableAmountInClfBankAccount": "Available Amount in CLF Bank Account",
+    "availableAmountInCmtcSubAccount": "Available Amount in CMTC Sub Account",
+    "fdAmountAndDate": "FD Amount and Date",
+    "totalAmountReceivedForCmtcEstablishment": "Total Amount Received for CMTC Establishment",
+    "totalExpenseAmountTill31March2026": "Total Expenditure Till 31 March 2026",
+    "totalRemainingAmountTill31March2026": "Total Remaining Amount Till 31 March 2026",
+    "amountGivenToCmtcManager": "Amount Given to CMTC Manager",
+    "amountGivenToCmtcAccountant": "Amount Given to CMTC Accountant",
+    "accountantPaymentType": "Accountant Payment Type",
+    "accountantPaymentAmount": "Accountant Payment Amount",
+    "managerPaymentType": "Manager Payment Type",
+    "managerPaymentAmount": "Manager Payment Amount",
+    "guardPaymentType": "Guard / Watchman Payment Type",
+    "guardPaymentAmount": "Guard / Watchman Payment Amount",
+    "totalExpenseAmountByCmtc": "Total Expenditure by CMTC",
+    "totalWorkingDays": "Total Working Days",
+    "totalNumberOfPrograms": "Total Number of Programmes",
+    "totalNumberOfBeneficiaries": "Total Number of Beneficiaries",
+    "totalWorkingDaysIn202526": "Total Working Days (2025-26)",
+    "totalNumberOfProgramsIn202526": "Total Number of Programmes (2025-26)",
+    "totalNumberOfBeneficiariesIn202526": "Total Number of Beneficiaries (2025-26)",
+    "save": "Save",
+    "selectCenter": "Select CMTC Center",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "other": "Other"
   }
 }

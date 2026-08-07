@@ -6,8 +6,9 @@ import {
   CycleType,
   AssessmentType,
 } from "../constants/assessmentConstants";
+import { AUDIT_ROLES, USER_ROLES } from "../../../utils/constants";
 
-const useAssessment = (initialCategory = null) => {
+const useAssessment = (initialCategory = null, userRole = null) => {
   const [cycleCategory, setCycleCategory] = useState(
     initialCategory
   );
@@ -15,9 +16,17 @@ const useAssessment = (initialCategory = null) => {
 
   const [cycleType, setCycleType] = useState(null);
 
+  // Helpers
+  const isInternal = cycleType === CycleType.INTERNAL;
+  const isExternal = cycleType === CycleType.EXTERNAL;
+  const isGrading = cycleCategory === CycleCategory.GRADING;
+  const isAudit = cycleCategory === CycleCategory.AUDIT;
+  
+  const canModifyViewType = !AUDIT_ROLES.includes(userRole);
+  
   useEffect(() => {
     if (cycleType === CycleType.EXTERNAL) {
-      setViewType("SELF"); // default
+      setViewType("ASSIGNED"); // default
     } else {
       setViewType("");
     }
@@ -42,11 +51,6 @@ const useAssessment = (initialCategory = null) => {
     return null;
   }, [cycleCategory, cycleType]);
 
-  // Helpers
-  const isInternal = cycleType === CycleType.INTERNAL;
-  const isExternal = cycleType === CycleType.EXTERNAL;
-  const isGrading = cycleCategory === CycleCategory.GRADING;
-  const isAudit = cycleCategory === CycleCategory.AUDIT;
 
   // Reset Function (important when switching pages)
   const resetAssessment = () => {
@@ -69,6 +73,7 @@ const useAssessment = (initialCategory = null) => {
     resetAssessment,
     viewType,
     setViewType,
+    canModifyViewType,
 
   };
 };
